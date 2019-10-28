@@ -1,4 +1,3 @@
-
 ---
 output:
   pdf_document: default
@@ -11,7 +10,7 @@ output:
 
 ```mermaid
 gantt
-  dateFormat YYYY-MM-DD
+
   title Progress of the project
   
   section Preparations

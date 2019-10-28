@@ -35,6 +35,12 @@ gantt
 
 # To-do Task
 
+* Preparations
+* 
+    1. * [x]   set up with Python 3 and PsychoPy
+
+    2. * [x]   color-generation codes 
+
 * Experimental design
 
     1. * [x]   Background study

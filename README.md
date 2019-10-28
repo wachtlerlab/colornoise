@@ -10,21 +10,21 @@ output:
 
 ```mermaid
 gantt
-
+  dateFormat YYYY-MM-DD
   title Progress of the project
   
   section Preparations
-  Experiment design
+  Experiment design            :active, design, 2019-10-01, 2019-11-15
   
 
   section Experiments
-  Experiment 1        : exp1, 2019-11-11, 2019-12-30
+  Experiment 1        :exp1, after design, 30d
   
 
   section Analysis
-  Analysis of Exp.1            : ana1, after exp1, 30d
+  Analysis of Exp.1            :ana1, after exp1, 30d
   
-  RMarkdown report              : report, after ana1, 60d
+  RMarkdown report              :report, after ana1, 60d
 
   section Manuscript
   Method section                :man1, after report, 70d

@@ -26,7 +26,7 @@ gantt
 
 
   section Manuscript
-  Method section                :man1, after report, 70d
+  Method section                :man1, after ana1, 70d
   Introduction                  :man3, after man1, 60d
   Discussion                    :man4, after man3, 30d
   Results                       :man2, after man3, 20d
@@ -43,7 +43,9 @@ gantt
     
     3. * [ ]   Pilot test
     
+    
 * Data collection
+
 
 * Data analysis
 

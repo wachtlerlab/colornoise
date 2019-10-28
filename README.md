@@ -1,0 +1,45 @@
+## Progress
+
+
+```mermaid
+gantt
+  dateFormat YYYY-MM-DD
+  title Progress of the project
+  
+  section Preparations
+  Experiment design
+  
+
+  section Experiments
+  Experiment 1        : exp1, 2019-11-11, 2019-12-30
+  
+
+  section Analysis
+  Analysis of Exp.1            : ana1, after exp1, 30d
+  
+  RMarkdown report              : report, after ana1, 60d
+
+  section Manuscript
+  Method section                :man1, after report, 70d
+  Introduction                  :man3, after man1, 60d
+  Discussion                    :man4, after man3, 30d
+  Results                       :man2, after man3, 20d
+  
+```
+
+# To-do Task
+
+* Experimental design
+
+    1. * [x]   Background study
+
+    2. * [ ]   Paradiam design
+    
+    3. * [ ]   Pilot test
+    
+* Data collection
+
+* Data analysis
+
+
+

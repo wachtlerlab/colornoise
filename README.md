@@ -23,8 +23,7 @@ gantt
 
   section Analysis
   Analysis of Exp.1            :ana1, after exp1, 30d
-  
-  RMarkdown report              :report, after ana1, 60d
+
 
   section Manuscript
   Method section                :man1, after report, 70d

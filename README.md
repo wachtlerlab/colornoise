@@ -43,11 +43,11 @@ gantt
 
 * Experimental design
 
-    1. * [x]   Background study
+    1. * [x]   background study
 
-    2. * [ ]   Paradiam design
+    2. * [ ]   paradiam design
     
-    3. * [ ]   Pilot test
+    3. * [ ]   pilot test
     
     
 * Data collection

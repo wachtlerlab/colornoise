@@ -36,7 +36,7 @@ gantt
 # To-do Task
 
 * Preparations
-* 
+
     1. * [x]   set up with Python 3 and PsychoPy
 
     2. * [x]   color-generation codes 

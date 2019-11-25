@@ -45,9 +45,11 @@ gantt
 
     1. * [x]   background study
 
-    2. * [ ]   paradiam design
+    2. * [x]   paradiam design
     
-    3. * [ ]   pilot test
+    3. * [ ]   input/output file organization
+    
+    4. * [ ]   pilot test
     
     
 * Data collection

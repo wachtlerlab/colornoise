@@ -14,10 +14,10 @@ gantt
   title Progress of the project
   
   section Preparations
-  Experiment design            :active, design, 2019-10-01, 2019-11-15
+  Experiment design            :active, design, 2019-10-01, 2019-12-9
   
 
-  section Experiments
+  section Data collection
   Experiment 1        :exp1, after design, 30d
   
 

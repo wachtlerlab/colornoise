@@ -14,11 +14,12 @@ gantt
   title Progress of the project
   
   section Preparations
-  Experiment design            :active, design, 2019-10-01, 2019-12-9
+  Experiment set up                   :set-up, 2019-09-01, 2019-10-01
+  Experiment design and pilot         :active, design, 2019-10-01, 2020-01-15
   
 
   section Data collection
-  Experiment 1        :exp1, after design, 30d
+  Experiment 1        :exp1, after exp1, 30d
   
 
   section Analysis
@@ -47,9 +48,11 @@ gantt
 
     2. * [x]   paradiam design
     
-    3. * [ ]   input/output file organization
+    3. * [x]   input/output file organization
     
-    4. * [ ]   pilot test
+    4. * [ ]   pilot test and preliminary data analysis
+    
+    5. * [ ]   set up 10-bit monitor
     
     
 * Data collection

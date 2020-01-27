@@ -50,9 +50,9 @@ gantt
     
     3. * [x]   input/output file organization
     
-    4. * [ ]   pilot test and preliminary data analysis
+    4. * [x]   pilot test and preliminary data analysis 
     
-    5. * [ ]   set up 10-bit monitor
+    5. * [ ]   set up 10-bit monitor (high color-depth is required)
     
     
 * Data collection

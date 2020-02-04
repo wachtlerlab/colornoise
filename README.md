@@ -19,7 +19,7 @@ The programming uses Psychopy packages (with Python 3.5, Linux).
 - /config
 - /data
 ### Input
-Running experiments requires config files in /config folder:
+Running experiments requires config files in /config folder:    
     *.par - parameters of stimuli
     
 ### Output

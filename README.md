@@ -23,8 +23,8 @@ Running experiments requires config files in /config folder:
     *.par - parameters of stimuli
     
 ### Output
-Running experiments writes config files in /config folder:    
+- Running experiments writes config files in /config folder:    
     *.xpp - records of each single session    
     *.xrl - records of all pairs of parameters and sessions belong to one subject    
-Results are saved in /data folder:    
+- Results are saved in /data folder:    
     *.xlsx - results of each complete session - no results will be saved if userbreak occurs    

@@ -185,7 +185,7 @@ class Exp():
             self.win.flip()
             core.wait(0.5)
 
-            # then present the standard and the test stimuli as well for 1 sec
+            # then present the standard and the test stimuli as well for 1.5 sec
             fix.draw()
             num.draw()
             leftRef.draw()

@@ -36,16 +36,17 @@ for idx, x in enumerate(np.repeat(theta, 2)):
     if idx % 2:
         stimulus[idx - 1]['label'] = 'hue_' + str(int((idx + 1) / 2)) + 'p'
         stimulus[idx - 1]['startVal'] = 5  # adjust this value
-        stimulus[idx - 1]['minVal'] = 0.5
+        stimulus[idx - 1]['minVal'] = 1
     else:
         stimulus[idx - 1]['label'] = 'hue_' + str(int(idx / 2)) + 'm'
-        stimulus[idx - 1]['startVal'] = -5
-        stimulus[idx - 1]['maxVal'] = -0.5
+        stimulus[idx - 1]['startVal'] = - 5
+        stimulus[idx - 1]['maxVal'] = -1
 
 """write params into *.par file; params as MultiStairConditions.xlsx"""
 
 
-def writepar(stim, name, quest=None):
+def writepar(stim, name, stepType, quest=None):
+    # stepType:'db', 'lin', 'log'
     # if quest is True, a QUEST staircase method will be used.
     with open('config/cn' + str(huenum * 2) + name + '.par', 'w+') as f:
 
@@ -86,9 +87,12 @@ def writepar(stim, name, quest=None):
             else:
                 f.write('stairType: simple' + '\n')
                 f.write('nReversals: 2' + '\n')
-                f.write('stepSizes: 3, 2, 1' + '\n')  # adjust this value
-                f.write('nUp: 1' + '\n' + 'nDown: 2' + '\n')
-                f.write('stepType: ' + 'db' + '\n' + '\n')
+                if x['startVal'] > 0 or stepType !='lin':
+                    f.write('stepSizes: 2, 1' + '\n')
+                else:
+                    f.write('stepSizes: -2, -1' + '\n')
+                f.write('nUp: 2' + '\n' + 'nDown: 3' + '\n')
+                f.write('stepType: ' + stepType + '\n' + '\n')
 
     f.close()
 
@@ -143,9 +147,8 @@ def readstair(parafile):
         for lidx, line in enumerate(lines):
 
             if line.startswith('stimulus:'):
-                condition = ('\n'.join(lines[lidx:lidx + 10])).replace(':',
+                condition = ('\n'.join(lines[lidx:lidx + 13])).replace(':',
                                                                        '')  # join all lines of a single condition, rearrange them in single lines, and remove ":";
-                                                                            # the index lidx+... matters!!! + 13 for quest
                 condition = dict(re.findall(r'(\S+)\s+(.+)',
                                             condition))  # find all non-white space + chars + white space, put all info into a dictionary
 
@@ -266,3 +269,14 @@ class writexrl():
 # np.random.seed(30)
 # rnd_g = np.random.permutation(stimulus)
 # writepar(rnd_g, 'rnd_g')
+
+# np.random.seed(10)
+# rnd_h = np.random.permutation(stimulus)
+# writepar(rnd_h, 'rnd_h')
+
+##################################################
+## back to lin steps, also control max and min values
+
+# np.random.seed(10)
+# rnd_a_lin = np.random.permutation(stimulus)
+# writepar(rnd_a_lin, 'rnd_a_lin', 'lin', quest=None)

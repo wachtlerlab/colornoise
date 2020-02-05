@@ -71,7 +71,7 @@ class Exp():
         return patch
 
     def patchpos(self, xlim, ylim):  # position of standard and test stimuli
-        n = np.sqrt(self.npatch)
+        n = int(np.sqrt(self.npatch))
         pos = [(x, y)
                for x in np.linspace(xlim[0], xlim[1], n)
                for y in np.linspace(ylim[0], ylim[1], n)]
@@ -167,8 +167,14 @@ class Exp():
             sPatch = self.patchstim()
             tPatch = self.patchstim()
             sPatch.colors, tPatch.colors = self.choosecon(standard, test)
-            sPatch.xys = self.patchpos([-1.5, 1.5], [1, 4])
-            tPatch.xys = self.patchpos([-1.5, 1.5], [-4, -1])
+
+            # randomly assign patch positions: upper (+) or lower (-)
+            patchpos = [[1, 4], [-4, -1]]
+            rndpos = patchpos.copy()
+            np.random.shuffle(rndpos)
+
+            sPatch.xys = self.patchpos([-1.5, 1.5], rndpos[0])
+            tPatch.xys = self.patchpos([-1.5, 1.5], rndpos[1])
 
             # fixation cross
             fix = visual.TextStim(self.win, text="+", units='deg', pos=[14.75, 0], height=0.4, color='black',
@@ -204,10 +210,10 @@ class Exp():
             while judge is None:
                 allkeys = event.waitKeys()
                 for key in allkeys:
-                    if (key == 'left' and rot > 0) or (key == 'right' and rot < 0):
+                    if (key == 'left' and rot * rndpos[0][0] > 0) or (key == 'right' and rot * rndpos[0][0] < 0):
                         judge = 1  # correct
                         thiskey = key
-                    elif (key == 'left' and rot < 0) or (key == 'right' and rot > 0):
+                    elif (key == 'left' and rot * rndpos[0][0] < 0) or (key == 'right' and rot * rndpos[0][0] > 0):
                         judge = 0  # incorrect
                         thiskey = key
                     elif key == 'escape':
@@ -234,8 +240,7 @@ class Exp():
 
 def runexp(subject):  # for experiments, you should run this function in bash
 
-    # parfile = ['config/cn32rnd_b.par', 'config/cn32rnd_a.par']
-    parfile = ['config/cn16rnd_g.par', 'config/cn16rndq_a.par']
+    parfile = ['config/cn16rnd_a_lin.par']
 
     for count, pf in enumerate(parfile):
         Exp(subject, pf).expcolornoise()  # run one session

@@ -144,21 +144,21 @@ def readstair(parafile):
         num = 0
         conditions = [None] * condnum
 
-        for lidx, line in enumerate(lines):
+        conidx = np.where([l.startswith('stimulus') == 1 for l in lines])  # the starting index of each condition
+        conidx = conidx[0] - 1  # get rid of stupid tuple and convert to python indexing
+        conlen = conidx[1] - conidx[0] - 1  # the line length of each condition
 
-            if line.startswith('stimulus:'):
-                condition = ('\n'.join(lines[lidx:lidx + 13])).replace(':',
-                                                                       '')  # join all lines of a single condition, rearrange them in single lines, and remove ":";
-                condition = dict(re.findall(r'(\S+)\s+(.+)',
-                                            condition))  # find all non-white space + chars + white space, put all info into a dictionary
+        for lidx in conidx:
+            condition = ('\n'.join(lines[lidx:lidx + conlen])).replace(':', '')  # join all lines of a single condition, rearrange them in single lines, and remove ":";
+            condition = dict(re.findall(r'(\S+)\s+(.+)',
+                                        condition))  # find all non-white space + chars + white space, put all info into a dictionary
+            for key, val in condition.items():
+                if key != 'label' and key != 'stepType' and key != 'stairType':  # be careful about labels containing non-numerical chars
+                    val = str2float(val)
+                condition[key] = val
 
-                for key, val in condition.items():
-                    if key != 'label' and key != 'stepType' and key != 'stairType':  # be careful about labels containing non-numerical chars
-                        val = str2float(val)
-                    condition[key] = val
-
-                conditions[num] = condition
-                num += 1
+            conditions[num] = condition
+            num += 1
 
     if condnum != num:
         print('Error!!! The number of conditions is not correct in the parameter file!')

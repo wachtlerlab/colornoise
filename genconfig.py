@@ -33,14 +33,20 @@ stimulus = [dict() for x in range(len(theta) * 2)]
 for idx, x in enumerate(np.repeat(theta, 2)):
     idx += 1
     stimulus[idx - 1]['theta'] = x
+    stimulus[idx - 1]['startVal'] = 5
+    stimulus[idx - 1]['minVal'] = 1
     if idx % 2:
         stimulus[idx - 1]['label'] = 'hue_' + str(int((idx + 1) / 2)) + 'p'
-        stimulus[idx - 1]['startVal'] = 5  # adjust this value
-        stimulus[idx - 1]['minVal'] = 1
     else:
         stimulus[idx - 1]['label'] = 'hue_' + str(int(idx / 2)) + 'm'
-        stimulus[idx - 1]['startVal'] = - 5
-        stimulus[idx - 1]['maxVal'] = -1
+    # if idx % 2:
+    #     stimulus[idx - 1]['label'] = 'hue_' + str(int((idx + 1) / 2)) + 'p'
+    #     stimulus[idx - 1]['startVal'] = 5  # adjust this value
+    #     stimulus[idx - 1]['minVal'] = 1
+    # else:
+    #     stimulus[idx - 1]['label'] = 'hue_' + str(int(idx / 2)) + 'm'
+    #     stimulus[idx - 1]['startVal'] = - 5
+    #     stimulus[idx - 1]['maxVal'] = -1
 
 """write params into *.par file; params as MultiStairConditions.xlsx"""
 
@@ -62,7 +68,7 @@ def writepar(stim, name, stepType, quest=None):
         f.write('patchsize: 0.75' + '\n')
         f.write('npatch: 16' + '\n' + '\n')
 
-        # this part can ans should be read
+        # this part can and should be read
         f.write('c: 0.12' + '\n' + 'sscale: 2.6' + '\n' + 'dlum: 0' + '\n' + '\n')
 
         for idx, x in enumerate(stim):
@@ -86,11 +92,11 @@ def writepar(stim, name, stepType, quest=None):
 
             else:
                 f.write('stairType: simple' + '\n')
-                f.write('nReversals: 2' + '\n')
+                f.write('nReversals: 3' + '\n')
                 if x['startVal'] > 0 or stepType !='lin':
                     f.write('stepSizes: 2, 1' + '\n')
                 else:
-                    f.write('stepSizes: -2, -1' + '\n')
+                    f.write('stepSizes: 2, 1' + '\n')
                 f.write('nUp: 2' + '\n' + 'nDown: 3' + '\n')
                 f.write('stepType: ' + stepType + '\n' + '\n')
 
@@ -146,7 +152,7 @@ def readstair(parafile):
 
         conidx = np.where([l.startswith('stimulus') == 1 for l in lines])  # the starting index of each condition
         conidx = conidx[0] - 1  # get rid of stupid tuple and convert to python indexing
-        conlen = conidx[1] - conidx[0] - 1  # the line length of each condition
+        conlen = conidx[1] - conidx[0]   # the line length of each condition
 
         for lidx in conidx:
             condition = ('\n'.join(lines[lidx:lidx + conlen])).replace(':', '')  # join all lines of a single condition, rearrange them in single lines, and remove ":";
@@ -275,8 +281,34 @@ class writexrl():
 # writepar(rnd_h, 'rnd_h')
 
 ##################################################
-## back to lin steps, also control max and min values
+## new par in 2020 Feb
 
+# np.random.seed(10)
+# rnd_a = np.random.permutation(stimulus)
+# writepar(rnd_a, 'rnd_a', 'db', quest=None)
+
+# np.random.seed(20)  # nReversals = 2
+# rnd_b = np.random.permutation(stimulus)
+# writepar(rnd_b, 'rnd_b', 'db', quest=None)
+
+# np.random.seed(30)  # nReversals = 3
+# rnd_c = np.random.permutation(stimulus)
+# writepar(rnd_c, 'rnd_c', 'db', quest=None)
+
+##################################################
+## test linear steps
 # np.random.seed(10)
 # rnd_a_lin = np.random.permutation(stimulus)
 # writepar(rnd_a_lin, 'rnd_a_lin', 'lin', quest=None)
+
+# np.random.seed(20)
+# rnd_b_lin = np.random.permutation(stimulus)
+# writepar(rnd_b_lin, 'rnd_b_lin', 'lin', quest=None)
+
+# np.random.seed(20)
+# rnd_lin_newtest = np.random.permutation(stimulus)
+# writepar(rnd_lin_newtest, 'rnd_lin_newtest', 'lin', quest=None)
+
+# np.random.seed(10)
+# rnd_lin_newtest = np.random.permutation(stimulus)
+# writepar(rnd_lin_newtest, 'rnd_lin_newtest', 'lin', quest=None)

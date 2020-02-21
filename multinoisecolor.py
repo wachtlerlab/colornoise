@@ -150,6 +150,10 @@ class Exp():
         count = 0
         for rot, cond in stairs:
             count += 1
+
+            if cond['label'].endswith('m'):  # for negative start values in staircases
+                rot = -rot
+
             # set two reference
             left = cond['leftRef']
             right = cond['rightRef']
@@ -160,8 +164,7 @@ class Exp():
             rightRef.pos = [5, 2.5]
 
             # set position and color of stimuli
-            theta = cond['standard']
-            standard = theta  # standard should be fixed
+            standard = cond['standard']  # standard should be fixed
             test = standard + rot
 
             sPatch = self.patchstim()
@@ -240,7 +243,7 @@ class Exp():
 
 def runexp(subject):  # for experiments, you should run this function in bash
 
-    parfile = ['config/cn16rnd_a_lin.par']
+    parfile = ['config/cn16rnd_lin_newtest.par']
 
     for count, pf in enumerate(parfile):
         Exp(subject, pf).expcolornoise()  # run one session
@@ -251,8 +254,7 @@ def runexp(subject):  # for experiments, you should run this function in bash
         if count == len(parfile):
             msg = visual.TextStim(waitwin, 'Well done!' + '\n' + 'You have finished all sessions :)',
                               color='black', units='deg', pos=(7, 0), height=0.8)
-        else:
-            msg = visual.TextStim(waitwin, 'Take a break!' + '\n' + 'Then press any key to start the next session :)',
+        else:            msg = visual.TextStim(waitwin, 'Take a break!' + '\n' + 'Then press any key to start the next session :)',
                               color='black', units='deg', pos=(7, 0), height=0.8)
 
         msg.draw()
@@ -261,3 +263,5 @@ def runexp(subject):  # for experiments, you should run this function in bash
         event.waitKeys()
         # if [k == 'escape' for k in continuekey]:
         #     core.quit()
+
+runexp('test')

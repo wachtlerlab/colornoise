@@ -46,7 +46,7 @@ class Exp():
         self.subject = subject
         self.idx = time.strftime("%Y%m%dT%H%M", time.localtime())  # add the current date
         self.parafile = parafile
-        self.param = genconfig.readpara(parafile)
+        self.param = genconfig.readpar(parafile).readparam()
         self.ntrial = 15
         self.npatch = 16
         self.mon = mon
@@ -132,7 +132,7 @@ class Exp():
             os.makedirs(path)  # create a new folder named by user name
 
         # staircases
-        conditions = genconfig.readstair(self.parafile)
+        conditions = genconfig.readpar(self.parafile).readstair()
         # conditions = data.importConditions('MultiStairConditions.xlsx')
 
         if conditions[0]['stairType'] == 'simple':
@@ -243,7 +243,7 @@ class Exp():
 
 def runexp(subject):  # for experiments, you should run this function in bash
 
-    parfile = ['config/cn16rnd_lin_newtest.par']
+    parfile = ['config/cn16rnd_high_d.par', 'config/cn16rnd_high_c.par', 'config/cn16rnd_high_b.par', 'config/cn16rnd_high_a.par']
 
     for count, pf in enumerate(parfile):
         Exp(subject, pf).expcolornoise()  # run one session

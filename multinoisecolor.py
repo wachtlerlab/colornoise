@@ -251,7 +251,7 @@ def runexp(subject):  # for experiments, you should run this function in bash
         waitwin = Exp(subject, pf).win
 
         #  rest between sessions
-        if count == len(parfile):
+        if count + 1 == len(parfile):
             msg = visual.TextStim(waitwin, 'Well done!' + '\n' + 'You have finished all sessions :)',
                               color='black', units='deg', pos=(7, 0), height=0.8)
         else:            msg = visual.TextStim(waitwin, 'Take a break!' + '\n' + 'Then press any key to start the next session :)',

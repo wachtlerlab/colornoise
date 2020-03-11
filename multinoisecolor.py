@@ -26,7 +26,6 @@ import rgb2sml_copy
 import colorpalette
 import genconfig
 
-
 """monitor settings"""
 mon = monitors.Monitor(name='testMonitor', width=38, distance=57)
 mon.setSizePix((1024, 768))
@@ -41,6 +40,8 @@ Csml = transf.center()
 Crgb = transf.sml2rgb(Csml)
 
 """experiments"""
+
+
 class Exp():
     def __init__(self, subject, parafile):
         self.subject = subject
@@ -126,19 +127,21 @@ class Exp():
         # if [k == 'escape' for k in startkey]:
         #     core.quit()
 
-
+        # check if there is a folder for the subject
         path = 'data/' + self.subject
         if not os.path.exists(path):
             os.makedirs(path)  # create a new folder named by user name
 
-        # staircases
+        # read staircase parameters
         conditions = genconfig.readpar(self.parafile).readstair()
-        # conditions = data.importConditions('MultiStairConditions.xlsx')
+        # conditions = data.importConditions('MultiStairConditions.xlsx')  # directly read from *.xlsx files
 
         if conditions[0]['stairType'] == 'simple':
-            stairs = data.MultiStairHandler(stairType='simple', conditions=conditions, nTrials=self.ntrial, method='sequential')
+            stairs = data.MultiStairHandler(stairType='simple', conditions=conditions, nTrials=self.ntrial,
+                                            method='sequential')
         elif conditions[0]['stairType'] == 'quest':
-            stairs = data.MultiStairHandler(stairType='quest',conditions=conditions, nTrials=self.ntrial, method='sequential')
+            stairs = data.MultiStairHandler(stairType='quest', conditions=conditions, nTrials=self.ntrial,
+                                            method='sequential')
 
         # write configuration files
         xpp = genconfig.writexpp(self.subject, self.idx, self.param['condition'])
@@ -147,11 +150,14 @@ class Exp():
         xrl = genconfig.writexrl(self.subject, self.parafile, xpp.f.name)
         xrl.mkxrl()
 
+        # start running the staircase
         count = 0
+
         for rot, cond in stairs:
             count += 1
 
-            if cond['label'].endswith('m'):  # for negative start values in staircases
+            if cond['label'].endswith(
+                    'm'):  # for negative start values in staircases, because *.par files only give abs values
                 rot = -rot
 
             # set two reference
@@ -163,7 +169,7 @@ class Exp():
             rightRef = self.patchref(right)
             rightRef.pos = [5, 2.5]
 
-            # set position and color of stimuli
+            # set colors of two stimuli
             standard = cond['standard']  # standard should be fixed
             test = standard + rot
 
@@ -182,8 +188,10 @@ class Exp():
             # fixation cross
             fix = visual.TextStim(self.win, text="+", units='deg', pos=[14.75, 0], height=0.4, color='black',
                                   colorSpace="rgb255")
-            # number of trial
-            num = visual.TextStim(self.win, text="trial " + str(count), units='deg', pos=[28, -13], height=0.4, color='black',
+
+            # a text showing the number of trial
+            num = visual.TextStim(self.win, text="trial " + str(count), units='deg', pos=[28, -13], height=0.4,
+                                  color='black',
                                   colorSpace="rgb255")
 
             # first present references for 0.5 sec
@@ -194,7 +202,7 @@ class Exp():
             self.win.flip()
             core.wait(0.5)
 
-            # then present the standard and the test stimuli as well for 1.5 sec
+            # then present the standard and test stimuli
             fix.draw()
             num.draw()
             leftRef.draw()
@@ -202,10 +210,13 @@ class Exp():
             sPatch.draw()
             tPatch.draw()
             self.win.flip()
-            core.wait(1.5)  # for how many seconds the stimuli will show
+
+            # the stimuli stays for 1.5 sec
+            core.wait(1.5)
+
+            # refresh the window, clear references and stimuli
             num.draw()
             self.win.flip()
-
 
             # get response
             judge = None
@@ -224,18 +235,16 @@ class Exp():
                         xrl.addbreak(breakinfo)
                         core.quit()
 
-            xpp.task(count, rot, cond, judge)  # write to *.xpp files
+            xpp.task(count, rot, cond, judge)  # write in *.xpp file
 
             stairs.addResponse(judge)  # to the next trial
+
             event.waitKeys(keyList=[thiskey])  # press the response key again to start the next trial
 
         xlsname = path + '/' + self.idx + self.param['condition'] + '.xlsx'
-        xrl.adddata(xlsname)
+        xrl.adddata(xlsname)  # write in *.xlsx file
 
         stairs.saveAsExcel(xlsname)  # save results
-
-        # self.win.close()
-        # core.quit()
 
 
 """run several sessions"""
@@ -243,7 +252,8 @@ class Exp():
 
 def runexp(subject):  # for experiments, you should run this function in bash
 
-    parfile = ['config/cn16rnd_high_d.par', 'config/cn16rnd_high_c.par', 'config/cn16rnd_high_b.par', 'config/cn16rnd_high_a.par']
+    parfile = ['config/cn16rnd_high_d.par', 'config/cn16rnd_high_c.par', 'config/cn16rnd_high_b.par',
+               'config/cn16rnd_high_a.par']
 
     for count, pf in enumerate(parfile):
         Exp(subject, pf).expcolornoise()  # run one session
@@ -253,9 +263,10 @@ def runexp(subject):  # for experiments, you should run this function in bash
         #  rest between sessions
         if count + 1 == len(parfile):
             msg = visual.TextStim(waitwin, 'Well done!' + '\n' + 'You have finished all sessions :)',
-                              color='black', units='deg', pos=(7, 0), height=0.8)
-        else:            msg = visual.TextStim(waitwin, 'Take a break!' + '\n' + 'Then press any key to start the next session :)',
-                              color='black', units='deg', pos=(7, 0), height=0.8)
+                                  color='black', units='deg', pos=(7, 0), height=0.8)
+        else:
+            msg = visual.TextStim(waitwin, 'Take a break!' + '\n' + 'Then press any key to start the next session :)',
+                                  color='black', units='deg', pos=(7, 0), height=0.8)
 
         msg.draw()
         waitwin.mouseVisible = False
@@ -264,4 +275,6 @@ def runexp(subject):  # for experiments, you should run this function in bash
         # if [k == 'escape' for k in continuekey]:
         #     core.quit()
 
-runexp('test')
+
+"""example"""
+# runexp('test')

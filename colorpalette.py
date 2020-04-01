@@ -173,6 +173,35 @@ def showcolorcircle(c=0.12, sscale=2.6, numStim=8):  # show the color circle
     event.waitKeys()
     winM.close()
 
+
+def alldisphue():
+    """
+    check what hue angle can be displayed in a 8-bit display and save the values in a *.npy file
+    :return: all presented hue angles
+    """
+    import matplotlib.pyplot as plt
+
+    theta = np.linspace(0, 360-1, 360)
+    convt = [newcolor(x, unit='degree') for x in theta]
+    rgb = [np.round(x[1]) for x in convt]
+    diff = np.empty(len(rgb) - 1)
+
+    for idx, val in enumerate(rgb):
+        if idx == len(rgb) - 1:
+            break
+        diff[idx] = sum(abs(rgb[idx + 1] - val)) != 0
+
+    seltheta = np.where(diff == 1)[0]
+
+    np.save('all-displayed-hue', seltheta)
+
+    fig = plt.figure()
+    plt.plot(diff)
+    plt.title("if the hue can be presented on a 8-bit? ")
+    plt.show()
+
+    return seltheta
+
 """example"""
 # showcolorcircle(c=0.12, numStim=16)
 # rgb,sml = newcolor(0, c=0.12, sscale=2.6, dlum=0, subject='test-abs')

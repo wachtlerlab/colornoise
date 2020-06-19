@@ -8,16 +8,18 @@ The programming uses Psychopy packages (with Python 3.5, Linux).
 | --- | --- | --- |
 | rgb2lms_copy | calibrate with a calibration file, transform between rgb and lms | calibration, transformation |
 | isolum | measure subject's isoluminance plane | isoslant, fitiso |
-| colorpalette | generate colors with hue angle, and subjective isoluminance adjustments if necessary | gensml, genrgb, newcolor, gentheta, showcolorcircle|
-| genconfig | write and read experiment parameters/results | writepar, writexpp, writexrl, readpara, readstair
+| colorpalette | generate colors with hue angle, and subjective isoluminance adjustments if necessary | gensml, genrgb, newcolor, gentheta, showcolorcircle |
+| genconfig | write and read experiment parameters/results | writepar, writexpp, writexrl, readpara |
 | multinoisecolor | make and excute the color noise experiment | Exp, runexp |
 | screensaver | screen-protect program in a colored board patten | None |
 
  
 ## Input and Output
+
 ### Important folders:
 - /config
 - /data
+
 ### Input
 Running experiments requires config files in /config folder:    
     *.par - parameters of stimuli

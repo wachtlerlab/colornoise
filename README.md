@@ -2,7 +2,7 @@
 
 
 ## Codes
-The programming uses Psychopy packages (with Python 3.5, Linux).
+The programming uses Psychopy packages (with Python 3.7, Linux).
 
 | *.py file | Description | Example functions/modules |
 | --- | --- | --- |

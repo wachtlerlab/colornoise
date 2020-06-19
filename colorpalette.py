@@ -52,8 +52,8 @@ def gensml(theta, c=0.12, sscale=2.6, gray=Csml, unit='rad'):  # generate any co
     lmratio = 1 * gray[2] / gray[1]  # this ratio can be adjusted
 
     sml = [gray[0] * (1.0 + sscale * c * np.sin(theta)),
-           gray[1] * (1.0 - c * np.cos(theta) * lmratio / (1.0 + lmratio)),
-           gray[2] * (1.0 + c * np.cos(theta) / (1.0 + lmratio))]
+           gray[1] * (1.0 - (c / (1.0 + 1. / lmratio)) * np.cos(theta)),
+           gray[2] * (1.0 + (c / (1.0 + lmratio)) * np.cos(theta))]
 
     return sml
 
@@ -111,13 +111,13 @@ def displaycolor(rgb):
 
 
 
-def gentheta(rgb, c=0.12, sscale=2.6, gray=Csml, unit='rad'):  # derive hur angle from rgb values
+def gentheta(rgb, c=0.12, sscale=2.6, gray=Csml, unit='rad'):  # derive hue angle from rgb values
     sml = transf.rgb2sml(rgb)
     lmratio = 1 * gray[2] / gray[1]  # this ratio can be adjusted
 
     y = (sml[0] / gray[0] - 1.0)/(sscale * c)  # sin value
     x = (sml[2] / gray[2] - 1.0) * (1.0 + lmratio) / c  # cos value
-    x = (sml[1] / gray[1] - 1.0) * (1.0 + lmratio) / (- c * lmratio)
+    # x = (sml[1] / gray[1] - 1.0) * (1.0 + lmratio) / (- c * lmratio)
     theta = np.arctan2(y, x)
 
     if unit != 'rad':
@@ -126,9 +126,11 @@ def gentheta(rgb, c=0.12, sscale=2.6, gray=Csml, unit='rad'):  # derive hur angl
             theta = 360 + theta
 
     return theta
+
     # sml = [gray[0] * (1.0 + sscale * c * np.sin(theta)),
     #        gray[1] * (1.0 - c * np.cos(theta) * lmratio / (1.0 + lmratio)),
     #        gray[2] * (1.0 + c * np.cos(theta) / (1.0 + lmratio))]
+
 
 """color circle"""
 
@@ -191,16 +193,33 @@ def alldisphue():
             break
         diff[idx] = sum(abs(rgb[idx + 1] - val)) != 0
 
+    fullrgb = np.empty((1000,3), float)
+    count = 0
+    for idx, val in enumerate(rgb):
+        if idx == len(rgb) - 1:
+            break
+        step = rgb[idx + 1] - val
+        if sum(abs(step)) != 0:
+            if sum(abs(step)) == 1:
+                fullrgb[count] = val
+                count += 1
+            else:
+                fullrgb[count] = val + [step[0], 0, 0]
+                fullrgb[count + 1] = val + [0, step[1], 0]
+                fullrgb[count + 2] = val + [0, 0, step[2]]
+                count += 3
+
+
     seltheta = np.where(diff == 1)[0]
 
-    np.save('all-displayed-hue', seltheta)
+    # np.save('all-displayed-hue', seltheta)
 
     fig = plt.figure()
     plt.plot(diff)
     plt.title("if the hue can be presented on a 8-bit? ")
     plt.show()
 
-    return seltheta
+    return rgb, fullrgb, diff, seltheta
 
 """example"""
 # showcolorcircle(c=0.12, numStim=16)

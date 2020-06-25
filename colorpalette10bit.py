@@ -200,8 +200,8 @@ def allvisiblehue(hue_res):
             next(it)
             next(it)
 
-    np.save('hue-list-10bit-res'+str(hue_res), seltheta)
-    np.save('rgb-list-10bit-res'+str(hue_res), selrgb)
+    np.save('config/colorlist/hue-list-10bit-res'+str(hue_res), seltheta)
+    np.save('config/colorlist/rgb-list-10bit-res'+str(hue_res), selrgb)
 
     return rgb, selrgb, theta, seltheta
 
@@ -210,7 +210,7 @@ def allvisiblehue(hue_res):
 # showcolorcircle(c=0.12, numStim=16)
 # rgb,sml = newcolor(0, c=0.12, sscale=2.6, dlum=0, subject='test-abs')
 
-# generate hue-list and rgb-list
+# # generate hue-list and rgb-list
 # rgb, selrgb, theta, seltheta = allvisiblehue(0.2)
 # rgb, selrgb, theta, seltheta = allvisiblehue(0.5)
 # rgb, selrgb, theta, seltheta = allvisiblehue(1.0)

@@ -40,7 +40,8 @@ def gengray(Csml, dlum):  # generate gray colors by changing luminance
     return gray
 
 
-def gensml(theta, c=0.12, sscale=2.6, gray=Csml, unit='rad'):  # generate any color sml value given the angle - without subjectctive adjustment
+def gensml(theta, c=0.12, sscale=2.6, gray=Csml,
+           unit='rad'):  # generate any color sml value given the angle - without subjectctive adjustment
     #  arguments:
     #  c as contrast (because it is isoluminant, so it equals to chromaticity now); current no larger than 0.155
     #  sscale just for better viewing -- usually no need to change
@@ -58,14 +59,16 @@ def gensml(theta, c=0.12, sscale=2.6, gray=Csml, unit='rad'):  # generate any co
     return sml
 
 
-def genrgb(theta, c=0.12, sscale=2.6, gray=Csml, unit='rad'):  # generate any color rgb value given the angle - without subjectctive adjustment
+def genrgb(theta, c=0.12, sscale=2.6, gray=Csml,
+           unit='rad'):  # generate any color rgb value given the angle - without subjectctive adjustment
 
     rgb = transf.sml2rgb(gensml(theta, c, sscale, gray, unit))
 
     return rgb
 
 
-def newcolor(theta, c=0.12, sscale=2.6, dlum=0, unit='rad', subject=None):  # generate any new color sml and rgb values - can have subjective adjustment; useful for generating colors on experiments
+def newcolor(theta, c=0.12, sscale=2.6, dlum=0, unit='rad',
+             subject=None):  # generate any new color sml and rgb values - can have subjective adjustment; useful for generating colors on experiments
     # arguments:
     # dlum: relative change from the default gray color
     # subject: user name as string
@@ -91,11 +94,13 @@ def newcolor(theta, c=0.12, sscale=2.6, dlum=0, unit='rad', subject=None):  # ge
 
                         # print("Error: No isoslant file is found! Results without subjective adjustment will be given!")
         else:
-            print("No subject is given/The given subject does not exist! Results without subjective adjustment will be given!")
+            print(
+                "No subject is given/The given subject does not exist! Results without subjective adjustment will be given!")
     else:
         print("No subject... Results without subjective adjustment will be given!")
 
-    tempgray = gengray(gray, dlum)  # old-fashioned way: first move along luminance axis to the temporal gray and then find the desired color
+    tempgray = gengray(gray,
+                       dlum)  # old-fashioned way: first move along luminance axis to the temporal gray and then find the desired color
 
     sml = gensml(theta, c, sscale, gray=tempgray, unit=unit)
     rgb = genrgb(theta, c, sscale, gray=tempgray, unit=unit)
@@ -103,25 +108,24 @@ def newcolor(theta, c=0.12, sscale=2.6, dlum=0, unit='rad', subject=None):  # ge
 
 
 def displaycolor(rgb):
-    win = visual.Window(size=[400, 400], allowGUI=True,  color=rgb, colorSpace="rgb255")
+    win = visual.Window(size=[400, 400], allowGUI=True, color=rgb, colorSpace="rgb255")
     win.flip()
     print(win.color)
     event.waitKeys()
     win.close()
 
 
-
 def gentheta(rgb, c=0.12, sscale=2.6, gray=Csml, unit='rad'):  # derive hue angle from rgb values
     sml = transf.rgb2sml(rgb)
     lmratio = 1 * gray[2] / gray[1]  # this ratio can be adjusted
 
-    y = (sml[0] / gray[0] - 1.0)/(sscale * c)  # sin value
+    y = (sml[0] / gray[0] - 1.0) / (sscale * c)  # sin value
     x = (sml[2] / gray[2] - 1.0) * (1.0 + lmratio) / c  # cos value
     # x = (sml[1] / gray[1] - 1.0) * (1.0 + lmratio) / (- c * lmratio)
     theta = np.arctan2(y, x)
 
     if unit != 'rad':
-        theta = 180 * theta/np.pi
+        theta = 180 * theta / np.pi
         if theta < 0:
             theta = 360 + theta
 
@@ -183,7 +187,7 @@ def alldisphue():
     """
     import matplotlib.pyplot as plt
 
-    theta = np.linspace(0, 360-1, 360)
+    theta = np.linspace(0, 360 - 1, 360)
     convt = [newcolor(x, unit='degree') for x in theta]
     rgb = [np.round(x[1]) for x in convt]
     diff = np.empty(len(rgb) - 1)
@@ -193,7 +197,7 @@ def alldisphue():
             break
         diff[idx] = sum(abs(rgb[idx + 1] - val)) != 0
 
-    fullrgb = np.empty((1000,3), float)
+    fullrgb = np.empty((1000, 3), float)
     count = 0
     for idx, val in enumerate(rgb):
         if idx == len(rgb) - 1:
@@ -209,7 +213,6 @@ def alldisphue():
                 fullrgb[count + 2] = val + [0, 0, step[2]]
                 count += 3
 
-
     seltheta = np.where(diff == 1)[0]
 
     # np.save('all-displayed-hue', seltheta)
@@ -221,6 +224,8 @@ def alldisphue():
 
     return rgb, fullrgb, diff, seltheta
 
+
 """example"""
 # showcolorcircle(c=0.12, numStim=16)
 # rgb,sml = newcolor(0, c=0.12, sscale=2.6, dlum=0, subject='test-abs')
+# alldisphue()

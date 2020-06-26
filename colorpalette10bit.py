@@ -175,24 +175,42 @@ def showcolorcircle(c=0.12, sscale=2.6, numStim=8):  # show the color circle
 
 
 
-def allvisiblehue():
+def allvisiblehue(hue_res):
     """
     check what hue angle is visible in a 10-bit display
     :return: all visible hue angles
     """
-    theta = np.linspace(0, 360-1, 360)
+    import matplotlib.pyplot as plt
+
+    theta = np.linspace(0, 360 - 1, int(360/hue_res))  # theta bin is 0.2 degree
     convt = [newcolor(x, unit='degree') for x in theta]
-    rgb = [np.round(x[1]) for x in convt]
-    diff = np.empty(len(rgb) - 1)
+    # rgb = [np.round(x[1]) for x in convt]
+    rgb = [x[1] for x in convt]
+    rgb_res = 1/2**10  # resolution of 10bit in [0, 1] scale
+    selrgb = []
+    seltheta = []
+    it = iter(list(range(0, len(rgb)-2)))
 
-    for idx, val in enumerate(rgb):
-        if idx == len(rgb) - 1:
-            break
-        diff[idx] = sum(abs(rgb[idx + 1] - val)) != 0
+    for idx in it:
+        selrgb.append(rgb[idx])
+        seltheta.append(rgb[idx])
+        if sum(abs(rgb[idx] - rgb[idx + 1]) > rgb_res) == 0:  # skip the repeated RGB
+            next(it)
+        if sum(abs(rgb[idx] - rgb[idx + 2]) > rgb_res) == 0:
+            next(it)
+            next(it)
 
-    return rgb, diff
+    np.save('config/colorlist/hue-list-10bit-res'+str(hue_res), seltheta)
+    np.save('config/colorlist/rgb-list-10bit-res'+str(hue_res), selrgb)
+
+    return rgb, selrgb, theta, seltheta
 
 
 """example"""
 # showcolorcircle(c=0.12, numStim=16)
 # rgb,sml = newcolor(0, c=0.12, sscale=2.6, dlum=0, subject='test-abs')
+
+# # generate hue-list and rgb-list
+# rgb, selrgb, theta, seltheta = allvisiblehue(0.2)
+# rgb, selrgb, theta, seltheta = allvisiblehue(0.5)
+# rgb, selrgb, theta, seltheta = allvisiblehue(1.0)

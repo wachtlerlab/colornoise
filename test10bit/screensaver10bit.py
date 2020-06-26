@@ -15,24 +15,16 @@ import time
 from psychopy import visual, core, monitors
 from psychopy.hardware import keyboard
 import colorpalette10bit
-from pypixxlib.viewpixx import VIEWPixx, _libdpx 
+# from pypixxlib.viewpixx import VIEWPixx, _libdpx
 
-my_device = VIEWPixx()
-my_device.setVideoMode('M16') # Set the right video mode
-my_device.updateRegisterCache() # Update the device
-_libdpx.DPxOpen()
-_libdpx.DPxDisableDinStabilize()
-_libdpx.DPxEnableDinDebounce()
-_libdpx.DPxEnableDinLogTimetags()
-_libdpx.DPxEnableDinLogEvents()
-_libdpx.DPxSetDinDataDir(int("00FF0000", 16))
-_libdpx.DPxSetDinBuff(int("C00000", 16), int("400000", 16))
-_libdpx.DPxSetDinDataOut(int("000000", 16))
-_libdpx.DPxUpdateRegCache()
+# my_device = VIEWPixx()
+# my_device.setVideoMode('M16') # Set the right video mode
+# my_device.updateRegisterCache() # Update the device
 
-mon = monitors.Monitor('VIEWPixx LITE')
-# mon.setDistance(114)#further away than normal?
-# win = visual.Window(size=[1024,768], monitor=mon)
+
+mon = monitors.Monitor(name='VIEWPixx LITE', width=38, distance=57)
+mon.setSizePix((1920, 1200))
+mon.save()  # if the monitor info is not saved
 
 win = visual.Window(fullscr=True, mouseVisible=False, bpc=(10, 10, 10), depthBits=10, monitor=mon)
 kb = keyboard.Keyboard()

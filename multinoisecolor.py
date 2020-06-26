@@ -22,7 +22,7 @@ import numpy as np
 import time
 from psychopy import visual, data, core, event, monitors, misc
 import os
-import rgb2sml_copy
+import rgb2sml_plus
 import colorpalette
 import genconfig
 import sys
@@ -32,15 +32,15 @@ import math
 from bisect import bisect_left
 
 """monitor settings"""
-mon = monitors.Monitor(name='Dell Inc. 23"', width=38, distance=57)
-mon.setSizePix((1920, 1080))
+mon = monitors.Monitor(name='VIEWPixx LITE', width=38, distance=57)
+mon.setSizePix((1920, 1200))
 mon.save()  # if the monitor info is not saved
 
 """calibration files, transformation, and gray background"""
 
-calib = rgb2sml_copy.calibration(rgb2sml_copy.openfile())  # Load the parameters of the calibration file
+calib = rgb2sml_plus.calibration(rgb2sml_plus.openfile())  # Load the parameters of the calibration file
 # Creates an object transf that has as methods all the needed transformations
-transf = rgb2sml_copy.transformation(calib.A0(), calib.AMatrix(), calib.Gamma())
+transf = rgb2sml_plus.transformation(calib.A0(), calib.AMatrix(), calib.Gamma())
 Csml = transf.center()
 Crgb = transf.sml2rgb(Csml)
 
@@ -63,7 +63,7 @@ class Exp:
         self.patch_nmb = 16
         self.trial_dur = 1.5
         self.mon = mon
-        self.win = visual.Window([800, 800], monitor=self.mon, unit='deg', colorSpace='rgb255',
+        self.win = visual.Window(monitor=self.mon, unit='deg', colorSpace='rgb255',
                                  color=Crgb, allowGUI=True, fullscr=True)
 
     """stimulus features"""
@@ -151,7 +151,7 @@ class Exp:
         msg = visual.TextStim(self.win, 'Welcome! Press any key to start this session :)', color='black', units='deg',
                               pos=(7, 0), height=0.8)
         msg.draw()
-        # self.win.mouseVisible = False
+        self.win.mouseVisible = False
         self.win.flip()
         event.waitKeys()
 
@@ -469,7 +469,6 @@ def run_exp(subject, par_file_path=None, res_dir=None, priors_file_path=None):
                                   color='black', units='deg', pos=(7, 0), height=0.8)
 
         msg.draw()
-        # waitwin.mouseVisible = False
         waitwin.flip()
         event.waitKeys()
         # if [k == 'escape' for k in continuekey]:

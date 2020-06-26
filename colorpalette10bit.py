@@ -15,18 +15,18 @@ import os
 import numpy as np
 from psychopy import visual, misc, event
 
-import rgb2sml10bit
+import rgb2sml_plus
 import filetools
 
 """load calibration file and make transformations"""
 
 gray_level = 0.66  # this is determined from the calibration file (rgb2lms)
 
-calib = rgb2sml10bit.calibration(rgb2sml10bit.openfile())  # Load the parameters of the calibration file
+calib = rgb2sml_plus.calibration(rgb2sml_plus.openfile())  # Load the parameters of the calibration file
 
-transf = rgb2sml10bit.transformation(calib.A0(),
+transf = rgb2sml_plus.transformation(calib.A0(),
                                      calib.AMatrix(),
-                                     calib.Gamma())  # Creates an object transf that has as methods all the needed transformations
+                                     calib.Gamma(), depthBits=10)  # Creates an object transf that has as methods all the needed transformations
 
 # get the gray color in the center of the color space
 Csml = transf.center()

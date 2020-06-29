@@ -22,7 +22,7 @@ import numpy as np
 import time
 from psychopy import visual, data, core, event, monitors, misc
 import os
-import rgb2sml_copy
+import rgb2sml_plus
 import colorpalette
 import genconfig
 import sys
@@ -38,9 +38,9 @@ mon.save()  # if the monitor info is not saved
 
 """calibration files, transformation, and gray background"""
 
-calib = rgb2sml_copy.calibration(rgb2sml_copy.openfile())  # Load the parameters of the calibration file
+calib = rgb2sml_plus.calibration(rgb2sml_plus.openfile())  # Load the parameters of the calibration file
 # Creates an object transf that has as methods all the needed transformations
-transf = rgb2sml_copy.transformation(calib.A0(), calib.AMatrix(), calib.Gamma())
+transf = rgb2sml_plus.transformation(calib.A0(), calib.AMatrix(), calib.Gamma())
 Csml = transf.center()
 Crgb = transf.sml2rgb(Csml)
 

@@ -22,8 +22,8 @@ import numpy as np
 import time
 from psychopy import visual, data, core, event, monitors, misc
 import os
-import rgb2sml_copy
-import colorpalette
+import rgb2sml10bit
+import colorpalette10bit
 import genconfig
 import sys
 import xlsxwriter
@@ -38,12 +38,13 @@ mon.save()  # if the monitor info is not saved
 
 """calibration files, transformation, and gray background"""
 
-calib = rgb2sml_copy.calibration(rgb2sml_copy.openfile())  # Load the parameters of the calibration file
-# Creates an object transf that has as methods all the needed transformations
-transf = rgb2sml_copy.transformation(calib.A0(), calib.AMatrix(), calib.Gamma())
+calib = rgb2sml10bit.calibration(rgb2sml10bit.openfile())  # Load the parameters of the calibration file
+transf = rgb2sml10bit.transformation(calib.A0(), calib.AMatrix(),
+                                     calib.Gamma())  # Creates an object transf that has as methods all the needed transformations
 Csml = transf.center()
 Crgb = transf.sml2rgb(Csml)
 
+rgb_list = 'config/colorlist/rgb-list-10bit-res1.0.npy'
 
 class Exp:
     """
@@ -63,22 +64,23 @@ class Exp:
         self.patch_nmb = 16
         self.trial_dur = 1.5
         self.mon = mon
-        self.win = visual.Window(monitor=self.mon, unit='deg', colorSpace='rgb255',
-                                 color=Crgb, allowGUI=True, fullscr=True)
+        self.win = visual.Window(monitor=self.mon,  unit='deg', colorSpace='rgb', 
+                                 color=Crgb, allowGUI=True, fullscr=True, 
+                                 bpc=(10, 10, 10), depthBits=10)
 
     """stimulus features"""
 
-    def patch_ref(self, theta):  # reference patches
+    def patchref(self, theta):  # reference patches
         ref = visual.Circle(win=self.win, units='deg', radius=0.8, fillColorSpace='rgb255', lineColorSpace='rgb255')
         ref.fillColor = \
-            colorpalette.newcolor(theta, self.param['c'], self.param['sscale'], self.param['dlum'], 'degree',
-                                  self.subject)[1]
+            colorpalette10bit.newcolor(theta, self.param['c'], self.param['sscale'], self.param['dlum'], 'degree',
+                                       self.subject)[1]
         ref.lineColor = ref.fillColor
         return ref
 
     def patch_stim(self, patchsize=0.75):  # standard and test stimuli
         patch = visual.ElementArrayStim(win=self.win, units='deg', nElements=self.patch_nmb, elementMask='circle',
-                                        elementTex=None, sizes=patchsize, colorSpace='rgb255')
+                                        elementTex=None, sizes=patchsize, colorSpace='rgb')
         return patch
 
     def patch_pos(self, xlim, ylim):  # position of standard and test stimuli
@@ -92,7 +94,7 @@ class Exp:
 
     def rand_color(self, theta, sigma, npatch, unit, subject):  # generate color noise
         noise = np.random.normal(theta, sigma, npatch)
-        color = [colorpalette.newcolor(n, self.param['c'], self.param['sscale'], self.param['dlum'], unit, subject) for
+        color = [colorpalette10bit.newcolor(n, self.param['c'], self.param['sscale'], self.param['dlum'], unit, subject) for
                  n in noise]
         sml, rgb = zip(*color)
         return sml, rgb
@@ -101,15 +103,15 @@ class Exp:
         sColor = None
         tColor = None
         if self.param['condition'] == 'L-L':  # low - low noise
-            sColor = colorpalette.newcolor(standard, self.param['c'], self.param['sscale'], self.param['dlum'],
-                                           unit='degree', subject=self.subject)[1]
-            tColor = colorpalette.newcolor(test, self.param['c'], self.param['sscale'], self.param['dlum'],
-                                           unit='degree', subject=self.subject)[1]
+            sColor = colorpalette10bit.newcolor(standard, self.param['c'], self.param['sscale'], self.param['dlum'],
+                                                unit='degree', subject=self.subject)[1]
+            tColor = colorpalette10bit.newcolor(test, self.param['c'], self.param['sscale'], self.param['dlum'],
+                                                unit='degree', subject=self.subject)[1]
 
         elif self.param['condition'] == 'L-H':  # low - high noise: only test stimulus has high noise
-            sColor = colorpalette.newcolor(standard, self.param['c'], self.param['sscale'], self.param['dlum'],
-                                           unit='degree', subject=self.subject)[1]
-            tColor = self.rand_color(test, self.param['sigma'], self.patch_nmb, unit='degree', subject=self.subject)[1]
+            sColor = colorpalette10bit.newcolor(standard, self.param['c'], self.param['sscale'], self.param['dlum'],
+                                                unit='degree', subject=self.subject)[1]
+            tColor = self.randcolor(test, self.param['sigma'], self.npatch, unit='degree', subject=self.subject)[1]
 
         elif self.param['condition'] == 'H-H':  # high - high noise
             sColor = self.rand_color(standard, self.param['sigma'], self.patch_nmb, unit='degree', subject=self.subject)[1]
@@ -121,7 +123,7 @@ class Exp:
         return sColor, tColor
 
     """tool fucntion"""
-
+    # TODO: check if this part makes sense for 10 bit! 
     def take_closest(self, arr, val):
         """
         Assumes arr is sorted. Returns closest value to val (could be itself).
@@ -156,6 +158,7 @@ class Exp:
         event.waitKeys()
 
         # read staircase parameters
+        # TODO: check staircases for 10-bit
         conditions = genconfig.ParReader(self.par_file).read_stair()
         # conditions = data.importConditions('MultiStairConditions.xlsx')  # directly read from *.xlsx files
 
@@ -216,7 +219,7 @@ class Exp:
                 judge, thiskey, trial_time = self.run_trial(rot, cond, count, xrl)
 
                 # check whether the theta is valid - if not, the rotation given by staircase should be corrected by achievable values
-                valid_theta = np.round(np.load('all-displayed-hue-more.npy'), decimals=1)
+                valid_theta = np.round(np.load(rgb_list), decimals=1)
                 disp_standard = self.take_closest(valid_theta, cond['standard'])  # theta actually displayed
                 stair_test = cond['standard'] + stairs._nextIntensity * (-1) ** (cond['label'].endswith('m'))  # theta for staircase
                 if stair_test < 0:
@@ -391,14 +394,11 @@ class Exp:
 
         # fixation cross
         fix = visual.TextStim(self.win, text="+", units='deg', pos=[14.75, 0], height=0.4, color='black',
-                              colorSpace="rgb255")
+                                  colorSpace="rgb")
+        # number of trial
+        num = visual.TextStim(self.win, text="trial " + str(count), units='deg', pos=[28, -13], height=0.4, color='black',
+                                  colorSpace="rgb")
 
-        # a text showing the number of trial
-        num = visual.TextStim(self.win, text="trial " + str(count), units='deg', pos=[28, -13], height=0.4,
-                              color='black',
-                              colorSpace="rgb255")
-
-        trial_time_start = time.time()
         # first present references for 0.5 sec
         fix.draw()
         num.draw()
@@ -407,7 +407,7 @@ class Exp:
         self.win.flip()
         core.wait(0.5)
 
-        # then present the standard and test stimuli
+        # then present the standard and the test stimuli as well for 1 sec
         fix.draw()
         num.draw()
         leftRef.draw()

@@ -22,11 +22,7 @@ import numpy as np
 import time
 from psychopy import visual, data, core, event, monitors, misc
 import os
-<<<<<<< HEAD
 import rgb2sml_plus
-=======
-import rgb2sml10bit
->>>>>>> 06e956a... add experiment codes
 import colorpalette10bit
 import genconfig
 import sys
@@ -42,16 +38,14 @@ mon.save()  # if the monitor info is not saved
 
 """calibration files, transformation, and gray background"""
 
-<<<<<<< HEAD
 calib = rgb2sml_plus.calibration(rgb2sml_plus.openfile())  # Load the parameters of the calibration file
 transf = rgb2sml_plus.transformation(calib.A0(), calib.AMatrix(),
                                      calib.Gamma(), depthBits=10)  # Creates an object transf that has as methods all the needed transformations
 Csml = transf.center()
 Crgb = transf.sml2rgb(Csml)
 
-=======
-calib = rgb2sml10bit.calibration(rgb2sml10bit.openfile())  # Load the parameters of the calibration file
-transf = rgb2sml10bit.transformation(calib.A0(), calib.AMatrix(),
+calib = rgb2sml_plus.calibration(rgb2sml_plus.openfile())  # Load the parameters of the calibration file
+transf = rgb2sml_plus.transformation(calib.A0(), calib.AMatrix(),
                                      calib.Gamma())  # Creates an object transf that has as methods all the needed transformations
 Csml = transf.center()
 Crgb = transf.sml2rgb(Csml)

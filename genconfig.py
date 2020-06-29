@@ -18,8 +18,9 @@ Functions for reading:
 @author: yannansu
 """
 
-import os as os
+import os
 import numpy as np
+import re
 
 if not os.path.exists('config'):
     os.makedirs('config')
@@ -62,7 +63,7 @@ class ParWriter:
 
             # this part can and should be read
             f.write('noise_condition: L-H\n')
-            f.write('sigma: 2\n\n')   # watch out the value!
+            f.write('sigma: 2\n\n')  # watch out the value!
 
             # this part is currently not read for running experiments; at moment it is only for documentation
             # because usually you do not need to change the display
@@ -131,6 +132,76 @@ class ParWriter:
 # ParWriter(hue_num=8, min_val=1, max_val=10).write('config/test_quest_LH.par', 'quest', start_val=3, p_threshold=.75, seed=42)
 # ParWriter(hue_num=8, min_val=1, max_val=10).write('config/test_psi.par', 'psi', seed=42)
 
+# every time add/delete lines in writepar(), remember to check this part, especially readstair()!!!
+class ParReader:
+    """
+    Parameters reader for *.par files
+    """
+
+    def __init__(self, par_file):
+        self.par_file = par_file
+
+    def str2float(self, s):
+        try:
+            float(s)
+            return float(s)
+        except ValueError:
+            if s[0] == '[':
+                s = s[1:-1]
+            return [float(x) for x in s.split(', ')]
+
+    def find_param(self, lines, paramname, sep):
+        for line in lines:
+            if line.startswith(paramname):
+                x = line.split(sep)[-1].strip()
+                try:
+                    float(x)
+                    return float(x)
+                except ValueError:
+                    return x
+
+    def read_param(self):
+        param = dict()
+        with open(self.par_file) as pf:
+            lines = pf.read().splitlines()
+            param['condition'] = self.find_param(lines, 'noise_condition', ': ')
+            param['sigma'] = self.find_param(lines, 'sigma', ': ')
+            param['c'] = self.find_param(lines, 'c', ': ')
+            param['sscale'] = self.find_param(lines, 'sscale', ': ')
+            param['dlum'] = self.find_param(lines, 'dlum', ': ')
+
+        return param
+
+    def read_stair(self):
+        with open(self.par_file) as pf:
+            # condnum = int(''.join(re.findall(r'[1-9]', self.par_file)))  # join all single numerical chars
+            lines = pf.read().splitlines()
+            num = 0
+            conditions = []
+
+            conidx = np.where([l.startswith('stimulus') == 1 for l in lines])  # the starting index of each condition
+            conidx = conidx[0] - 1  # get rid of stupid tuple and convert to python indexing
+            conlen = conidx[1] - conidx[0]  # the line length of each condition
+
+            for lidx in conidx:
+                # join all lines of a single condition, rearrange them in single lines, and remove ":";
+                condition = ('\n'.join(lines[lidx:lidx + conlen])).replace(':', '')
+                # find all non-white space + chars + white space, put all info into a dictionary
+                condition = dict(re.findall(r'(\S+)\s+(.+)', condition))
+                for key, val in condition.items():
+                    # be careful about labels containing non-numerical chars
+                    if key != 'label' and key != 'stepType' and key != 'stairType':
+                        val = self.str2float(val)
+                    condition[key] = val
+
+                conditions.append(condition)
+                num += 1
+
+        # if condnum != num:
+        #     print('Error!!! The number of conditions is not correct in the parameter file!')
+
+        return conditions
+
 
 class XppWriter:
     """
@@ -181,6 +252,12 @@ class XppReader:
     def __init__(self, xpp_file_path):
         self.xpp_file_path = xpp_file_path
 
+    def str2float(self, float_str):
+        try:
+            return float(float_str)
+        except ValueError:
+            return None
+
     def read(self):
         trial_duration = None
         trials = []
@@ -189,14 +266,14 @@ class XppReader:
             for line in xpp_file:
                 if line.startswith('trial duration'):
                     trial_duration = line.rstrip('\n').split()[-1]
-                    trial_duration = str2float(trial_duration)
+                    trial_duration = self.str2float(trial_duration)
                 elif line.startswith('task'):
                     steps_started = True
                     next(xpp_file)
                 elif steps_started:
                     parts = line.rstrip('\n').split()
                     trials.append((int(parts[0]), float(parts[1]), float(parts[2]), float(parts[3]), float(parts[4]),
-                                   float(parts[5]), float(parts[6]), str2float(parts[7]), int(parts[8]),
+                                   float(parts[5]), float(parts[6]), self.str2float(parts[7]), int(parts[8]),
                                    float(parts[9])))
         return trials, trial_duration
 
@@ -208,7 +285,7 @@ class XppReader:
         lines = xpp_file.readlines()  #
         for idx, line in enumerate(lines):
             if line.startswith('task'):
-                nextline = lines[idx+1].split()
+                nextline = lines[idx + 1].split()
                 nth = [i for i, word in enumerate(nextline) if word == term][0]
                 N = idx + 2
                 break
@@ -217,16 +294,9 @@ class XppReader:
             print("The given term is not found!")
             data = None
 
-        data = [str2float(l.split()[nth]) for l in lines[N:-1]]
+        data = [self.str2float(l.split()[nth]) for l in lines[N:-1]]
 
         return data
-
-
-def str2float(float_str):
-    try:
-        return float(float_str)
-    except ValueError:
-        return None
 
 
 class XrlWriter:
@@ -265,77 +335,3 @@ class XrlReader:
                 parts = line.rstrip('\n').split(', ')
                 sessions[parts[1]] = (parts[0], parts[2])
         return sessions
-
-
-# every time add/delete lines in writepar(), remember to check this part, especially readstair()!!!
-class ParReader:
-    """
-    Parameters reader for *.par files
-    """
-
-    def __init__(self, par_file):
-        self.par_file = par_file
-
-    def str2float(self, s):
-        try:
-            float(s)
-            return float(s)
-        except ValueError:
-            if s[0] == '[':
-                s = s[1:-1]
-            return [float(x) for x in s.split(', ')]
-
-    def find_param(self, lines, paramname):
-        for line in lines:
-            if line.startswith(paramname):
-                x = line.split(': ')[-1].strip()
-                try:
-                    float(x)
-                    return float(x)
-                except ValueError:
-                    return x
-
-    def read_param(self):
-        param = dict()
-
-        with open(self.par_file) as pf:
-            lines = pf.read().splitlines()
-            param['condition'] = self.find_param(lines, 'noise_condition')
-            param['sigma'] = self.find_param(lines, 'sigma')
-            param['c'] = self.find_param(lines, 'c')
-            param['sscale'] = self.find_param(lines, 'sscale')
-            param['dlum'] = self.find_param(lines, 'dlum')
-
-        return param
-
-    def read_stair(self):
-        import re
-
-        with open(self.par_file) as pf:
-            # condnum = int(''.join(re.findall(r'[1-9]', self.par_file)))  # join all single numerical chars
-            lines = pf.read().splitlines()
-            num = 0
-            conditions = []
-
-            conidx = np.where([l.startswith('stimulus') == 1 for l in lines])  # the starting index of each condition
-            conidx = conidx[0] - 1  # get rid of stupid tuple and convert to python indexing
-            conlen = conidx[1] - conidx[0]  # the line length of each condition
-
-            for lidx in conidx:
-                # join all lines of a single condition, rearrange them in single lines, and remove ":";
-                condition = ('\n'.join(lines[lidx:lidx + conlen])).replace(':', '')
-                # find all non-white space + chars + white space, put all info into a dictionary
-                condition = dict(re.findall(r'(\S+)\s+(.+)', condition))
-                for key, val in condition.items():
-                    # be careful about labels containing non-numerical chars
-                    if key != 'label' and key != 'stepType' and key != 'stairType':
-                        val = self.str2float(val)
-                    condition[key] = val
-
-                conditions.append(condition)
-                num += 1
-
-        # if condnum != num:
-        #     print('Error!!! The number of conditions is not correct in the parameter file!')
-
-        return conditions

@@ -87,7 +87,7 @@ class transformation():
         if self.depthBits == 8:
             rgb = (rgb[0] % 256, rgb[1] % 256, rgb[2] % 256)
             c = np.array(rgb)
-        elif self.depthBiits == 10:
+        elif self.depthBits == 10:
             c = (np.array(
                 rgb) + 1) / 2 * 1023  # The 10-bit modification is the rescaling into [-1,1] as Psychopy requires in colorSpace 'rgb'
         else:

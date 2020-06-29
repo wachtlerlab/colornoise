@@ -4,8 +4,9 @@
 import numpy as np
 from psychopy import visual, core, event
 import os
-import rgb2sml10bit
+import rgb2sml_plus
 import colorpalette
+from genconfig import ParReader
 import filetools
 
 """get user information"""
@@ -30,13 +31,13 @@ path = 'isolum/' + user
 
 """load calibration file and make transformations"""
 
-info = rgb2sml10bit.openfile().splitlines()
+info = rgb2sml_plus.openfile().splitlines()
 
 calibinfo = info[0:2] + info[7:17]
 
-calib = rgb2sml10bit.calibration(rgb2sml10bit.openfile())  # Load the parameters of the calibration file
+calib = rgb2sml_plus.calibration(rgb2sml_plus.openfile())  # Load the parameters of the calibration file
 
-transf = rgb2sml10bit.transformation(calib.A0(),
+transf = rgb2sml_plus.transformation(calib.A0(),
                                      calib.AMatrix(),
                                      calib.Gamma())  # Creates an object transf that has as methods all the needed transformations
 
@@ -161,8 +162,8 @@ def showfit(datafile, paramfile):  # arguments are file names as strings; the fi
 
     with open(paramfile) as f:
         lines = f.read().splitlines()
-        amplitude = filetools.readparam(lines, 'amplitude')
-        phase = filetools.readparam(lines, 'phase')
+        amplitude = ParReader(paramfile).find_param(lines, 'amplitude', '=')
+        phase = ParReader(paramfile).find_param(lines, 'phase', '=')
         # offset = filetools.readparam(lines, 'offset')
 
     import matplotlib.pyplot as plt

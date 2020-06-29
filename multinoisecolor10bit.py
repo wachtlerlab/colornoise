@@ -23,7 +23,7 @@ import time
 from psychopy import visual, data, core, event, monitors, misc
 import os
 import rgb2sml_plus
-import colorpalette10bit
+from colorpalette_plus import ColorPicker
 import genconfig
 import sys
 import xlsxwriter
@@ -36,22 +36,14 @@ mon = monitors.Monitor(name='VIEWPixx LITE', width=38, distance=57)
 mon.setSizePix((1920, 1200))
 mon.save()  # if the monitor info is not saved
 
-"""calibration files, transformation, and gray background"""
 
-calib = rgb2sml_plus.calibration(rgb2sml_plus.openfile())  # Load the parameters of the calibration file
-transf = rgb2sml_plus.transformation(calib.A0(), calib.AMatrix(),
-                                     calib.Gamma(), depthBits=10)  # Creates an object transf that has as methods all the needed transformations
-Csml = transf.center()
-Crgb = transf.sml2rgb(Csml)
-
-calib = rgb2sml_plus.calibration(rgb2sml_plus.openfile())  # Load the parameters of the calibration file
-transf = rgb2sml_plus.transformation(calib.A0(), calib.AMatrix(),
-                                     calib.Gamma())  # Creates an object transf that has as methods all the needed transformations
-Csml = transf.center()
-Crgb = transf.sml2rgb(Csml)
-
-rgb_list = 'config/colorlist/rgb-list-10bit-res1.0.npy'
->>>>>>> 06e956a... add experiment codes
+# """calibration files, transformation, and gray background"""
+#
+# calib = rgb2sml_plus.calibration(rgb2sml_plus.openfile())  # Load the parameters of the calibration file
+# transf = rgb2sml_plus.transformation(calib.A0(), calib.AMatrix(),
+#                                      calib.Gamma(), depthBits=10)
+# Csml = transf.center()
+# Crgb = transf.sml2rgb(Csml)
 
 class Exp:
     """
@@ -67,37 +59,34 @@ class Exp:
             res_dir = 'data/'
         self.res_dir = res_dir
         self.priors_file_path = priors_file_path
-        self.trial_nmb = 20
         self.patch_nmb = 16
+        self.trial_nmb = 20
         self.trial_dur = 1.5
-        self.mon = mon
-        self.win = visual.Window(monitor=self.mon,  unit='deg', colorSpace='rgb', 
-                                 color=Crgb, allowGUI=True, fullscr=True, 
-<<<<<<< HEAD
-                                 bpc=(10, 10, 10), depthBits=10)  # TODO: maybe change depthBits as a parameter?
-=======
-                                 bpc=(10, 10, 10), depthBits=10)
->>>>>>> 06e956a... add experiment codes
+
+        self.depthBits = 8
+        self.ColorPicker = ColorPicker(c=self.param['c'], sscale=self.param['sscale'], unit='deg',
+                                       depthBits=self.depthBits, subject=self.subject)
+        self.ColorSpace = self.ColorPicker.colorSpace
+        self.Csml = self.ColorPicker.Csml
+        self.Crgb = self.ColorPicker.Crgb
+        self.rgb_list = 'config/config_10bit/colorlist/rgb-list-10bit-res1.0.npy'
+        self.mon = monitors.Monitor(name='VIEWPixx LITE', width=38, distance=57)
+        self.win = visual.Window(monitor=self.mon, unit='deg', colorSpace=self.ColorSpace,
+                                 color=self.Crgb, allowGUI=True, fullscr=True,
+                                 bpc=(self.depthBits, self.depthBits, self.depthBits), depthBits=self.depthBits)
 
     """stimulus features"""
 
-    def patchref(self, theta):  # reference patches
-        ref = visual.Circle(win=self.win, units='deg', radius=0.8, fillColorSpace='rgb255', lineColorSpace='rgb255')
-        ref.fillColor = \
-<<<<<<< HEAD
-            colorpalette10bit.Generator(c=self.param['c'], sscale=self.param['sscale'], unit='degree', depthBits=10, subject=self.subject).newcolor(theta,self.param['dlum'])[1]
-        # ref.fillColor = colorpalette10bit.newcolor(theta, self.param['c'], self.param['sscale'], self.param['dlum'], 'degree',
-        #                                self.subject)[1]
-=======
-            colorpalette10bit.newcolor(theta, self.param['c'], self.param['sscale'], self.param['dlum'], 'degree',
-                                       self.subject)[1]
->>>>>>> 06e956a... add experiment codes
+    def patch_ref(self, theta):  # reference patches
+        ref = visual.Circle(win=self.win, units='deg', radius=0.8, fillColorSpace=self.ColorSpace, lineColorSpace=self.ColorSpace)
+        ref.fillColor = self.ColorPicker.newcolor(theta, self.param['dlum'])[1]
+        # ref.fillColor = ColorPicker(c=self.param['c'], sscale=self.param['sscale'], unit='deg', depthBits=self.depthBits, subject=self.subject).newcolor(theta,self.param['dlum'])[1]
         ref.lineColor = ref.fillColor
         return ref
 
     def patch_stim(self, patchsize=0.75):  # standard and test stimuli
         patch = visual.ElementArrayStim(win=self.win, units='deg', nElements=self.patch_nmb, elementMask='circle',
-                                        elementTex=None, sizes=patchsize, colorSpace='rgb')
+                                        elementTex=None, sizes=patchsize, colorSpace=self.ColorSpace)
         return patch
 
     def patch_pos(self, xlim, ylim):  # position of standard and test stimuli
@@ -109,10 +98,12 @@ class Exp:
 
     """color noise & noise conditions"""
 
-    def rand_color(self, theta, sigma, npatch, unit, subject):  # generate color noise
+    def rand_color(self, theta, sigma, npatch):  # generate color noise
         noise = np.random.normal(theta, sigma, npatch)
-        color = [colorpalette10bit.newcolor(n, self.param['c'], self.param['sscale'], self.param['dlum'], unit, subject) for
-                 n in noise]
+        color = [ColorPicker.newcolor(theta, self.param['dlum']) for n in noise]
+        # color = [ColorPicker(c=self.param['c'], sscale=self.param['sscale'], unit='deg', depthBits=self.depthBits,
+        #                      subject=self.subject).newcolor(theta,self.param['dlum']) for
+        #          n in noise]
         sml, rgb = zip(*color)
         return sml, rgb
 
@@ -120,19 +111,22 @@ class Exp:
         sColor = None
         tColor = None
         if self.param['condition'] == 'L-L':  # low - low noise
-            sColor = colorpalette10bit.newcolor(standard, self.param['c'], self.param['sscale'], self.param['dlum'],
-                                                unit='degree', subject=self.subject)[1]
-            tColor = colorpalette10bit.newcolor(test, self.param['c'], self.param['sscale'], self.param['dlum'],
-                                                unit='degree', subject=self.subject)[1]
+            sColor = self.ColorPicker.newcolor(standard, self.param['dlum'])[1]
+            tColor = self.ColorPicker.newcolor(test, self.param['dlum'])[1]
+            # sColor = ColorPicker(c=self.param['c'], sscale=self.param['sscale'], unit='deg', depthBits=self.depthBits,
+            # subject=self.subject).newcolor(standard,self.param['dlum'])[1]
+            # tColor = ColorPicker(c=self.param['c'], sscale=self.param['sscale'], unit='deg', depthBits=self.depthBits,
+            # subject=self.subject).newcolor(test, self.param['dlum'])[1]
 
         elif self.param['condition'] == 'L-H':  # low - high noise: only test stimulus has high noise
-            sColor = colorpalette10bit.newcolor(standard, self.param['c'], self.param['sscale'], self.param['dlum'],
-                                                unit='degree', subject=self.subject)[1]
-            tColor = self.randcolor(test, self.param['sigma'], self.npatch, unit='degree', subject=self.subject)[1]
+            sColor = self.ColorPicker.newcolor(standard, self.param['dlum'])[1]
+            # sColor = ColorPicker(c=self.param['c'], sscale=self.param['sscale'], unit='deg', depthBits=self.depthBits,
+            # subject=self.subject).newcolor(standard, self.param['dlum'])[1]
+            tColor = self.rand_color(test, self.param['sigma'], self.patch_nmb)[1]
 
         elif self.param['condition'] == 'H-H':  # high - high noise
-            sColor = self.rand_color(standard, self.param['sigma'], self.patch_nmb, unit='degree', subject=self.subject)[1]
-            tColor = self.rand_color(test, self.param['sigma'], self.patch_nmb, unit='degree', subject=self.subject)[1]
+            sColor = self.rand_color(standard, self.param['sigma'], self.patch_nmb)[1]
+            tColor = self.rand_color(test, self.param['sigma'], self.patch_nmb)[1]
 
         else:
             print("No noise condition corresponds to the input!")
@@ -140,7 +134,8 @@ class Exp:
         return sColor, tColor
 
     """tool fucntion"""
-    # TODO: check if this part makes sense for 10 bit! 
+
+    # TODO: check if this part makes sense for 10 bit!
     def take_closest(self, arr, val):
         """
         Assumes arr is sorted. Returns closest value to val (could be itself).
@@ -161,7 +156,7 @@ class Exp:
     """main experiment"""
 
     def run_session(self):
-        
+
         path = os.path.join(self.res_dir, self.subject)
         if not os.path.exists(path):
             os.makedirs(path)
@@ -236,19 +231,17 @@ class Exp:
                 judge, thiskey, trial_time = self.run_trial(rot, cond, count, xrl)
 
                 # check whether the theta is valid - if not, the rotation given by staircase should be corrected by achievable values
-<<<<<<< HEAD
-                valid_theta = np.round(np.load('all-displayed-hue-more.npy'), decimals=1)
-=======
-                valid_theta = np.round(np.load(rgb_list), decimals=1)
->>>>>>> 06e956a... add experiment codes
+                valid_theta = np.round(np.load(self.rgb_list), decimals=1)
+
                 disp_standard = self.take_closest(valid_theta, cond['standard'])  # theta actually displayed
-                stair_test = cond['standard'] + stairs._nextIntensity * (-1) ** (cond['label'].endswith('m'))  # theta for staircase
+                stair_test = cond['standard'] + stairs._nextIntensity * (-1) ** (
+                    cond['label'].endswith('m'))  # theta for staircase
                 if stair_test < 0:
                     stair_test += 360
                 disp_test = self.take_closest(valid_theta, stair_test)
                 disp_intensity = abs(disp_test - disp_standard)
                 if disp_intensity > 300:
-                   disp_intensity = 360 - (disp_test + disp_standard)
+                    disp_intensity = 360 - (disp_test + disp_standard)
                 stairs.addResponse(judge, disp_intensity)
 
                 print('to xpp:', count, rot, disp_intensity, cond, judge, trial_time)
@@ -258,9 +251,11 @@ class Exp:
 
                 event.waitKeys(keyList=[thiskey])  # press the response key again to start the next trial
 
-            xrl.add_data(xlsname)  # write in *.xlsx file - TO DO: fill in the All Intensities with real displayed values
+            xrl.add_data(
+                xlsname)  # write in *.xlsx file - TO DO: fill in the All Intensities with real displayed values
             stairs.saveAsExcel(xlsname)  # save results
-            psydat_file_path = os.path.join(path, self.idx + self.param['condition'] + '.psydat') # save the handler into a psydat-file
+            psydat_file_path = os.path.join(path, self.idx + self.param[
+                'condition'] + '.psydat')  # save the handler into a psydat-file
             misc.toFile(psydat_file_path, stairs)
 
         elif isinstance(stairs, list):
@@ -289,25 +284,26 @@ class Exp:
 
                     valid_theta = np.round(np.load('all-displayed-hue-more.npy'), decimals=1)
                     disp_standard = self.take_closest(valid_theta, cond['standard'])  # theta actually displayed
-                    stair_test = cond['standard'] + cur_handler._nextIntensity * (-1) ** (cond['label'].endswith('m'))  # theta for staircase
+                    stair_test = cond['standard'] + cur_handler._nextIntensity * (-1) ** (
+                        cond['label'].endswith('m'))  # theta for staircase
                     if stair_test < 0:
                         stair_test += 360
                     disp_test = self.take_closest(valid_theta, stair_test)
                     disp_intensity = abs(disp_test - disp_standard)
                     if disp_intensity > 300:
-                       disp_intensity = 360 - (disp_test + disp_standard)
+                        disp_intensity = 360 - (disp_test + disp_standard)
                     cur_handler.addResponse(judge, disp_intensity)
 
                     if len(rot_all_disp) <= handler_idx:  # add displayed intensities
                         rot_all_disp.append([])
                     rot_all_disp[handler_idx].append(disp_intensity)
-                                                                                                                                               
+
                     print('stair test: ' + str(stair_test) + ', ' + 'disp_test:' + str(disp_test))
 
                     if isinstance(cur_handler, data.PsiHandler):
                         estimates[cur_handler.extraInfo['label']].append(
-                            [cur_handler.estimateLambda()[0],           # location
-                             cur_handler.estimateLambda768()[1],           # slope
+                            [cur_handler.estimateLambda()[0],  # location
+                             cur_handler.estimateLambda768()[1],  # slope
                              cur_handler.estimateThreshold(0.75)])
                     elif isinstance(cur_handler, data.QuestHandler):
                         estimates[cur_handler.extraInfo['label']].append(
@@ -348,7 +344,7 @@ class Exp:
                     cur_handler.savePosterior(file_name + '.npy')
 
         """
-        REMOVE this part: constant stimui
+        #TODO: REMOVE this part: constant stimui
         ============================
         elif isinstance(stairs, data.TrialHandler):
             # start running the staircase using TrialHandler for the grid method
@@ -415,11 +411,12 @@ class Exp:
 
         # fixation cross
         fix = visual.TextStim(self.win, text="+", units='deg', pos=[14.75, 0], height=0.4, color='black',
-                                  colorSpace="rgb")
+                              colorSpace=self.ColorSpace)
         # number of trial
-        num = visual.TextStim(self.win, text="trial " + str(count), units='deg', pos=[28, -13], height=0.4, color='black',
-                                  colorSpace="rgb")
+        num = visual.TextStim(self.win, text="trial " + str(count), units='deg', pos=[28, -13], height=0.4,
+                              color='black', colorSpace=self.ColorSpace)
 
+        trial_time_start = time.time()
         # first present references for 0.5 sec
         fix.draw()
         num.draw()
@@ -470,7 +467,6 @@ class Exp:
 
 
 def run_exp(subject, par_file_path=None, res_dir=None, priors_file_path=None):
-
     if par_file_path:
         par_files = [par_file_path]
     else:
@@ -496,8 +492,7 @@ def run_exp(subject, par_file_path=None, res_dir=None, priors_file_path=None):
         #     core.quit()
 
 
-
-# run_exp(subject='ysu_lab_updown', par_file_path='config/test_updown.par', res_dir='data')
+run_exp(subject='test10bit', par_file_path='config/config_8bit/cn16rnd_b.par', res_dir='data')
 
 #  # run experiment in bash by calling
 # # # "python multinoisecolor.py [subject] [optional par_file] [optional results_dir] [optional priors_file]"

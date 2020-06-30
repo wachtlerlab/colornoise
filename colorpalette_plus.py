@@ -180,7 +180,7 @@ class ColorPicker:
 
         for idx in it:
             selrgb.append(rgb[idx])
-            seltheta.append(rgb[idx])
+            seltheta.append(theta[idx])
             if sum(abs(rgb[idx] - rgb[idx + 1]) > rgb_res) == 0:  # skip the repeated RGB
                 next(it)
             if sum(abs(rgb[idx] - rgb[idx + 2]) > rgb_res) == 0:

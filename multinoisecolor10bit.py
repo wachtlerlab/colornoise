@@ -69,7 +69,7 @@ class Exp:
         self.ColorSpace = self.ColorPicker.colorSpace
         self.Csml = self.ColorPicker.Csml
         self.Crgb = self.ColorPicker.Crgb
-        self.rgb_list = 'config/config_10bit/colorlist/rgb-list-10bit-res1.0.npy'
+        self.hue_list = 'config/config_10bit/colorlist/hue-list-10bit-res0.2-sub-None.npy'
         self.mon = monitors.Monitor(name='VIEWPixx LITE', width=38, distance=57)
         self.win = visual.Window(monitor=self.mon, unit='deg', colorSpace=self.ColorSpace,
                                  color=self.Crgb, allowGUI=True, fullscr=True,
@@ -78,7 +78,8 @@ class Exp:
     """stimulus features"""
 
     def patch_ref(self, theta):  # reference patches
-        ref = visual.Circle(win=self.win, units='deg', radius=0.8, fillColorSpace=self.ColorSpace, lineColorSpace=self.ColorSpace)
+        ref = visual.Circle(win=self.win, units='deg', radius=0.8, fillColorSpace=self.ColorSpace,
+                            lineColorSpace=self.ColorSpace)
         ref.fillColor = self.ColorPicker.newcolor(theta, self.param['dlum'])[1]
         # ref.fillColor = ColorPicker(c=self.param['c'], sscale=self.param['sscale'], unit='deg', depthBits=self.depthBits, subject=self.subject).newcolor(theta,self.param['dlum'])[1]
         ref.lineColor = ref.fillColor
@@ -162,8 +163,9 @@ class Exp:
             os.makedirs(path)
 
         # welcome
-        msg = visual.TextStim(self.win, 'Welcome! Press any key to start this session :)', color='black', units='deg',
-                              pos=(7, 0), height=0.8)
+        msg = visual.TextStim(self.win, 'Welcome!' + '\n' + ' Press any key to start this session :)', color='black',
+                              units='deg',
+                              pos=(0, 0), height=0.8)
         msg.draw()
         self.win.mouseVisible = False
         self.win.flip()
@@ -231,7 +233,7 @@ class Exp:
                 judge, thiskey, trial_time = self.run_trial(rot, cond, count, xrl)
 
                 # check whether the theta is valid - if not, the rotation given by staircase should be corrected by achievable values
-                valid_theta = np.round(np.load(self.rgb_list), decimals=1)
+                valid_theta = np.round(np.load(self.hue_list), decimals=1)
 
                 disp_standard = self.take_closest(valid_theta, cond['standard'])  # theta actually displayed
                 stair_test = cond['standard'] + stairs._nextIntensity * (-1) ** (
@@ -282,7 +284,7 @@ class Exp:
                     judge_all[handler_idx].append(judge)
                     # cur_handler.addResponse(judge)  # to the next trial
 
-                    valid_theta = np.round(np.load('all-displayed-hue-more.npy'), decimals=1)
+                    valid_theta = np.round(np.load(self.hue_list), decimals=1)
                     disp_standard = self.take_closest(valid_theta, cond['standard'])  # theta actually displayed
                     stair_test = cond['standard'] + cur_handler._nextIntensity * (-1) ** (
                         cond['label'].endswith('m'))  # theta for staircase
@@ -410,10 +412,10 @@ class Exp:
         tPatch.xys = self.patch_pos([-1.5, 1.5], rndpos[1])
 
         # fixation cross
-        fix = visual.TextStim(self.win, text="+", units='deg', pos=[14.75, 0], height=0.4, color='black',
+        fix = visual.TextStim(self.win, text="+", units='deg', pos=[0, 0], height=0.4, color='black',
                               colorSpace=self.ColorSpace)
         # number of trial
-        num = visual.TextStim(self.win, text="trial " + str(count), units='deg', pos=[28, -13], height=0.4,
+        num = visual.TextStim(self.win, text="trial " + str(count), units='deg', pos=[12, -10], height=0.4,
                               color='black', colorSpace=self.ColorSpace)
 
         trial_time_start = time.time()
@@ -480,10 +482,10 @@ def run_exp(subject, par_file_path=None, res_dir=None, priors_file_path=None):
         #  rest between sessions
         if count + 1 == len(par_files):
             msg = visual.TextStim(waitwin, 'Well done!' + '\n' + 'You have finished all sessions :)',
-                                  color='black', units='deg', pos=(7, 0), height=0.8)
+                                  color='black', units='deg', pos=(0, 0), height=0.8)
         else:
             msg = visual.TextStim(waitwin, 'Take a break!' + '\n' + 'Then press any key to start the next session :)',
-                                  color='black', units='deg', pos=(7, 0), height=0.8)
+                                  color='black', units='deg', pos=(0, 0), height=0.8)
 
         msg.draw()
         waitwin.flip()
@@ -492,19 +494,19 @@ def run_exp(subject, par_file_path=None, res_dir=None, priors_file_path=None):
         #     core.quit()
 
 
-run_exp(subject='test10bit', par_file_path='config/config_8bit/cn16rnd_b.par', res_dir='data')
+# run_exp(subject='test10bit', par_file_path='config/config_8bit/cn16rnd_b.par', res_dir='data')
 
 #  # run experiment in bash by calling
 # # # "python multinoisecolor.py [subject] [optional par_file] [optional results_dir] [optional priors_file]"
-# if __name__ == '__main__':
-#     # pass the first argument (subject) and optionally the second one (par-file) to the run_exp function
-#     par_file = None
-#     if len(sys.argv) > 2:
-#         par_file = sys.argv[2]
-#     results_dir = None
-#     if len(sys.argv) > 3:
-#         results_dir = sys.argv[3]
-#     priors_file = None
-#     if len(sys.argv) > 4:
-#         priors_file = sys.argv[4]
-#     run_exp(sys.argv[1], par_file, results_dir, priors_file)
+if __name__ == '__main__':
+    # pass the first argument (subject) and optionally the second one (par-file) to the run_exp function
+    par_file = None
+    if len(sys.argv) > 2:
+        par_file = sys.argv[2]
+    results_dir = None
+    if len(sys.argv) > 3:
+        results_dir = sys.argv[3]
+    priors_file = None
+    if len(sys.argv) > 4:
+        priors_file = sys.argv[4]
+    run_exp(sys.argv[1], par_file, results_dir, priors_file)

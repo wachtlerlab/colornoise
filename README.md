@@ -3,6 +3,7 @@
 
 ## Codes
 The programming uses Psychopy (v2020.1) with Python 3.7 (Ubuntu 18.04.3 LTS).
+The experiment can be implemented by 8-bit or 10-bit color depths.  
 
 | *.py file | Description | Example functions/modules |
 | --- | --- | --- |

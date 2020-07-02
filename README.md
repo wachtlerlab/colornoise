@@ -2,16 +2,18 @@
 
 
 ## Codes
-The programming uses Psychopy packages (with Python 3.7, Linux).
+The programming uses Psychopy (v2020.1) with Python 3.7 (Ubuntu 18.04.3 LTS).
+The experiment can be implemented by 8-bit or 10-bit color depths.  
 
 | *.py file | Description | Example functions/modules |
 | --- | --- | --- |
-| rgb2lms_copy | calibrate with a calibration file, transform between rgb and lms | calibration, transformation |
+| rgb2lms_plus | calibrate with a calibration file, transform between rgb and lms | calibration, transformation |
 | isolum | measure subject's isoluminance plane | isoslant, fitiso |
-| colorpalette | generate colors with hue angle, with subjective isoluminance adjustments if necessary | gensml, genrgb, newcolor, gentheta, showcolorcircle|
-| genconfig | write and read experiment parameters/results | writepar, writexpp, writexrl, readpara |
-| multinoisecolor | make and excute the color noise experiment | Exp, runexp |
-| screensaver | screen-protect program in a colored board patten | None |
+| colorpalette_plus | generates sml and RGB values with hue angles on an iso-luminance plane, and vice versa | ColorPicker|
+| genconfig | write and read experiment config files | ParWriter, ParReader, XppWriter, XppReader, XrlWriter, XrlReader |
+| multinoisecolor | excute the color noise experiment in 8-bit color depths | Exp, run_exp |
+| multinoisecolor10bit | excute the color noise experiment in 10-bit color depths| Exp, run_exp |
+| screensaver | screen-protect program in a colored board patten | run_scrsaver |
 
  
 ## Input and Output

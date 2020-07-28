@@ -6,9 +6,15 @@ library(readxl)
 library(quickpsy)
 library(dplyr)
 library(openxlsx)
-#library(ggpubr)
+library(reticulate)
 
 # TDDO: add python complie module and color codes for plotting
+source('colorpalette_plus.py')
+
+#color4plot <- function (num){
+#    colorcodes = ColorPicker().circolors(numStim=num)
+#    return [x / 255 for x in colorcodes]
+#}
 
 
 # import and merge data

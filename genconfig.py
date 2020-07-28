@@ -273,8 +273,10 @@ class XppReader:
                 elif steps_started:
                     parts = line.rstrip('\n').split()
                     trials.append((int(parts[0]), float(parts[1]), float(parts[2]), float(parts[3]), float(parts[4]),
-                                   float(parts[5]), float(parts[6]), self.str2float(parts[7]), int(parts[8]),
-                                   float(parts[9])))
+                                   float(parts[5]), float(parts[6]), self.str2float(parts[7]), int(parts[8])))
+                    # trials.append((int(parts[0]), float(parts[1]), float(parts[2]), float(parts[3]), float(parts[4]),
+                    #                float(parts[5]), float(parts[6]), self.str2float(parts[7]), int(parts[8]),
+                    #                float(parts[9])))
         return trials, trial_duration
 
     def read_customized(self, term):
@@ -297,6 +299,9 @@ class XppReader:
         data = [self.str2float(l.split()[nth]) for l in lines[N:-1]]
 
         return data
+
+
+# trials, trial_duration = XppReader('config/test20200205T1125.xpp').read()
 
 
 class XrlWriter:

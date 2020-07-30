@@ -331,7 +331,7 @@ class Exp:
 
             config_tools.write_xrl(self.subject, xls_file=xlsname)
             stairs.saveAsExcel(xlsname)  # save results
-            psydat_file_path = os.path.join(path, self.idx + self.param['condition'] + '.psydat')  # save the handler into a psydat-file
+            psydat_file_path = os.path.join(path, "psydat", self.idx + self.param['condition'] + '.psydat')  # save the handler into a psydat-file
             misc.toFile(psydat_file_path, stairs)
 
         elif isinstance(stairs, list):
@@ -453,7 +453,6 @@ def run_exp(subject, par_file_path=None, cfg_file_path=None, res_dir=None, prior
         #     core.quit()
 
 
-# run_exp(subject='yaml', par_file_path='examples/parameter_example.yaml', res_dir='data')
 # run_exp(subject='pilot', par_file_path=['config/cn4_quest_LL_a.yaml'], cfg_file_path='config/expconfig_8bit.yaml')
 
 """ 
@@ -475,19 +474,4 @@ if __name__ == '__main__':
     results_dir = args.results_dir
     priors_file = args.priors_file
     run_exp(subject, par_file, cfg_file, results_dir, priors_file)
-
-    # # pass the first argument (subject) and optionally the second one (par-file) to the run_exp function
-    # par_file = None
-    # if len(sys.argv) > 2:
-    #     par_file = sys.argv
-    # cfg_file = None
-    # if len(sys.argv) > 3:
-    #     cfg_file = sys.argv[3]
-    # results_dir = None
-    # if len(sys.argv) > 4:
-    #     results_dir = sys.argv[4]
-    # priors_file = None
-    # if len(sys.argv) > 5:
-    #     priors_file = sys.argv[5]
-    # run_exp(sys.argv[1], par_file, cfg_file, results_dir, priors_file)
 

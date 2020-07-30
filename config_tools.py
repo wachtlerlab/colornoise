@@ -86,7 +86,7 @@ def write_par(file_path, noise, method, seed=42, hue_num=8, min_max=None, start_
     """
 
     if min_max is None:
-        min_max = [1, 10]
+        min_max = [0.2, 10]
     if up_down is None:
         up_down = [None, None]
     """generate stimuli"""

@@ -7,9 +7,10 @@ library(quickpsy)
 library(dplyr)
 library(openxlsx)
 library(reticulate)
+library(ggpubr)
 
 # TDDO: add python complie module and color codes for plotting
-source('colorpalette_plus.py')
+#source('colorpalette_plus.py')
 
 #color4plot <- function (num){
 #    colorcodes = ColorPicker().circolors(numStim=num)
@@ -20,7 +21,7 @@ source('colorpalette_plus.py')
 # import and merge data
 fit_pf <- function (subject, all_files=FALSE, plot=TRUE){
   if (!all_files) {
-    all_files <- list.files(path= paste0("data/", subject), pattern = "*numeric.xlsx", full.names = T)
+    all_files <- list.files(path= paste0("data/", subject), pattern = "*.xlsx", full.names = T)
   }
 
   df_list <- list()
@@ -55,5 +56,4 @@ fit_pf <- function (subject, all_files=FALSE, plot=TRUE){
   }
 }
 
-"example"
-#fit_pf("test_lin_final", all_files=FALSE, plot=TRUE)
+fit_pf("pilot", all_files=FALSE, plot=TRUE)

@@ -5,9 +5,10 @@ import numpy as np
 from psychopy import visual, core, event
 import os
 import rgb2sml_plus
-import colorpalette
+import colorpalette_plus
+import config_tools
 from genconfig import ParReader
-import filetools
+
 
 """get user information"""
 
@@ -44,8 +45,9 @@ transf = rgb2sml_plus.transformation(calib.A0(),
 gray_level = 0.66  # this is determined from the calibration file (rgb2lms)
 
 # get the gray color in the center of the color space
-Csml = colorpalette.Csml
-Crgb = colorpalette.Crgb
+ColorPicker = colorpalette_plus.ColorPicker(unit='rad')
+Csml = ColorPicker.Csml
+Crgb = ColorPicker.Crgb
 
 win = visual.Window(unit='pix', size=[1200, 1200], allowGUI=True, colorSpace="rgb255", color=Crgb, fullscr=True)
 
@@ -65,7 +67,7 @@ def isoslant(c, r):
         freq = refresh / keep
 
         rect = visual.Rect(win, pos=[0, 0], width=0.35, height=0.5, fillColorSpace="rgb255", lineColorSpace="rgb255")
-        rect.fillColor = colorpalette.gensml(theta, c=c, sscale=2.6, gray=Csml, unit='rad')
+        rect.fillColor = ColorPicker.gensml(theta)
         rect.lineColor = rect.fillColor
 
         text = visual.TextStim(win, text=str(shownum) + ' of ' + str(numStim) + ' stimuli at ' + str(freq) + 'Hz',
@@ -80,9 +82,9 @@ def isoslant(c, r):
                 mouse_X, _ = mouse.getPos()  # get the current position of mouse as ratio: 1 as right edge, -1 as left edge
                 dlum = - mouse_X * lim  # the change of luminance: move left -> brighter, move right -> darker
                 # rect.fillColor = transf.sml2rgb([baseC[0], (1 + dlum) * baseC[1], (1 + dlum) * baseC[2]])
-                refgray = colorpalette.gengray(Csml, dlum)
+                refgray = ColorPicker.gengray(Csml, dlum)
 
-                rect.fillColor = transf.sml2rgb(colorpalette.gensml(theta, c=c, sscale=2.6, gray=refgray, unit='rad'))
+                rect.fillColor = transf.sml2rgb(ColorPicker.gensml(theta))
                 rect.lineColor = rect.fillColor
 
                 rect.draw()
@@ -159,12 +161,9 @@ def isoslant(c, r):
 def showfit(datafile, paramfile):  # arguments are file names as strings; the file name should include relative path
 
     stim, res = np.loadtxt(datafile, skiprows=15, unpack=True)
-
-    with open(paramfile) as f:
-        lines = f.read().splitlines()
-        amplitude = ParReader(paramfile).find_param(lines, 'amplitude', '=')
-        phase = ParReader(paramfile).find_param(lines, 'phase', '=')
-        # offset = filetools.readparam(lines, 'offset')
+    amplitude = config_tools.read_value(paramfile, 'amplitude', sep='=')
+    phase = config_tools.read_value(paramfile, 'phase', sep='=')
+    # offset = filetools.readparam(lines, 'offset')
 
     import matplotlib.pyplot as plt
     plt.figure(figsize=(6, 4))

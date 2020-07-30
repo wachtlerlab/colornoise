@@ -13,9 +13,8 @@ import os
 import numpy as np
 from psychopy import visual, misc, event
 import rgb2sml_plus
-from genconfig import ParReader
+import config_tools
 import warnings
-import filetools
 
 
 class ColorPicker:
@@ -58,6 +57,16 @@ class ColorPicker:
         else:
             raise ValueError
 
+    def gengray(self, gray_sml, dlum):
+        """
+        Change gray colors by changing luminance
+        :param gray_sml:  gray color sml
+        :param dlum:      change in luminance
+        :return:          new gray color sml
+        """
+        gray = [gray_sml[0], gray_sml[1] * (1 + dlum), gray_sml * (1 + dlum)]
+        return gray
+
     def gensml(self, theta, gray=None):
         """
         Generate any color sml value given the angle - WITHOUT subjective adjustment.
@@ -95,7 +104,7 @@ class ColorPicker:
         :param dlum: relative luminance change from the default gray color
         :return: sml and grb values
         """
-        # gray = [self.Csml[0], self.Csml[1] * (1 + dlum), self.Csml[2] * (1 + dlum)  # TODO: check whether it is needed 
+        gray = self.gengray(self.Csml, dlum)
 
         if self.subject is not None:
             basepath = 'isolum/' + self.subject
@@ -104,27 +113,26 @@ class ColorPicker:
                 for root, dirs, names in os.walk(basepath):  # show names also in subfolders
                     for name in names:
                         if name.endswith('.isoslant'):
-                            file = open(root + '/' + name, "r", encoding='utf-8')
-                            lines = file.read().splitlines()
-                            amplitude = ParReader(name).find_param(lines, 'amplitude', '=')
-                            phase = ParReader(name).find_param(lines, 'phase', '=')
+                            amplitude = config_tools.read_value(name, 'amplitude', sep='=')
+                            phase = config_tools.read_value(name, 'phase', sep='=')
+
+                            # amplitude = config_tools.read_value(name, 'dl', sep=':')  # for iris-isoslant data
+                            # phase = config_tools.read_value(name, 'phi', sep=':')
 
                             # offset = ParReader(name).find_param(lines, 'offset', '=')
                             # offset = filetools.findparam(lines, 'offset')
 
-                            # dlum = dlum + amplitude * np.sin(theta + phase) + offset
-                            dlum = dlum + amplitude * np.sin(theta + phase)   
-
+                            # sub_dlum = dlum + amplitude * np.sin(theta + phase) + offset
+                            sub_dlum = dlum + amplitude * np.sin(theta + phase)
             else:
                 warnings.warn("No isoslant file is found for this subject! "
                               "Results without subjective adjustment will be given.")
         else:
-            dlum = 0
+            sub_dlum = 0
             warnings.warn("No subjective adjustment is requested. "
                           "Results without subjective adjustment will be given.")
 
-        # tempgray = gengray(gray, dlum)  # old-fashioned way: first move along luminance axis to the temporal gray and then find the desired color
-        tempgray = [self.Csml[0], self.Csml[1] * (1 + dlum), self.Csml[2] * (1 + dlum)]
+        tempgray = self.gengray(gray, sub_dlum)  # first move along luminance axis to the temporal gray and then find the desired color
         
         sml = self.gensml(theta, gray=tempgray)
         rgb = self.genrgb(theta, gray=tempgray)

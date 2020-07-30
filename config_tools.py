@@ -252,6 +252,25 @@ def read_xrl(xrl_file):
 #           xpp_file='subject_example20200000T0000.yaml', break_info='userbreak')
 
 
+def read_value(text_file, keywords, sep=':'):
+    """
+
+    :param text_file:       the path of text file
+    :param keywords:        the keywords you are looking for [list]
+    :param sep:             the separator
+    :return:                the values corresponding to the keywords
+    """
+    file = open(text_file, "r", encoding='utf-8')
+    lines = file.read().splitlines()
+    for word in keywords:
+        for line in lines:
+            if line.startswith(word):
+                x = line.split(sep)[-1].strip()
+                try:
+                    float(x)
+                    return float(x)
+                except ValueError:
+                    return x
 
 # def xpp2yaml(xpp_file, yaml_file):
 #     """

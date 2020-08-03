@@ -12,7 +12,6 @@ The experiment stimuli can be implemented by 8-bit or 10-bit color depths.
 | colorpalette_plus | generates sml and RGB values with hue angles on an iso-luminance plane, and vice versa | ColorPicker|
 | genconfig | (abandoned!) write and read experiment config files | ParWriter, ParReader, XppWriter, XppReader, XrlWriter, XrlReader |
 | config_tools | write and read experiment config files | write_cfg, write_par, WriteXpp, write_xrl, read_yml |
-| multinoisecolor | (abandoned!) excute the color noise experiment in 8-bit color depths | Exp, run_exp |
 | multinoisecolor10bit | excute the color noise experiment in 10-bit color depths| Exp, run_exp |
 | screensaver | screen-protect program in a colored board patten | run_scrsaver |
 

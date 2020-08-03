@@ -21,7 +21,7 @@ import numpy as np
 # This function looks in the directory basepath the file ending with rgb2lms,
 # its output is a string with the data in the file
 def openfile():
-    basepath = './'
+    basepath = './config'
     for root, dirs, names in os.walk(basepath):  # show names also in subfolders
         for name in names:
             # print(os.path.join(root, name))

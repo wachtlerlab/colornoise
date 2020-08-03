@@ -240,6 +240,8 @@ def read_xrl(xrl_file):
 
 
 """example"""
+
+
 # write_cfg('metadata_examples/expconfig_example.yaml')
 # write_par('metadata_examples/parameter_example.yaml', 'L-L', 'quest')
 # xpp = WriteXpp('subject_example', '20200000T0000')
@@ -272,6 +274,7 @@ def read_value(text_file, keywords, sep=':'):
                 except ValueError:
                     return x
 
+
 # def xpp2yaml(xpp_file, yaml_file):
 #     """
 #     Convert existed task sections in xpp files to yaml file.
@@ -297,3 +300,38 @@ def read_value(text_file, keywords, sep=':'):
 #     with open(yaml_file, 'w') as file:
 #         yaml.safe_dump(dict, file, default_flow_style=False, sort_keys=False)
 
+# def par2yaml(par_file, yaml_file):
+#     from genconfig import ParReader
+#     param = ParReader(par_file).read_param()
+#     conditions = ParReader(par_file).read_stair()
+#     """basic config"""
+#     par_dict = {'c': param['c'],
+#                 'sscale': param['sscale'],
+#                 'dlum': param['dlum'],
+#                 'noise_condition': param['condition'],
+#                 'sigma': param['sigma']}
+#     for idx, x in enumerate(conditions):
+#         stim_num = 'stimulus_' + str(idx)
+#         par_dict[stim_num] = {}
+#         par_dict[stim_num]['label'] = x['label']
+#         par_dict[stim_num]['standard'] = float(x['standard'])
+#         par_dict[stim_num]['leftRef'] = float(x['leftRef'])
+#         par_dict[stim_num]['rightRef'] = float(x['rightRef'])
+#         par_dict[stim_num]['stairType'] = x['stairType']
+#         par_dict[stim_num]['startVal'] = x['startVal']
+#         par_dict[stim_num]['min_val'] = x['minVal']
+#         par_dict[stim_num]['max_val'] = None
+#
+#         """specify for simple method"""
+#         par_dict[stim_num]['stepType'] = x['stepType']
+#         par_dict[stim_num]['nReversals'] = x['nReversals']
+#         par_dict[stim_num]['stepSizes'] = x['stepSizes']
+#         par_dict[stim_num]['nUp'] = x['nUp']
+#         par_dict[stim_num]['nDown'] = x['nDown']
+#
+#         """specify for quest method"""
+#         par_dict[stim_num]['startValSd'] = 10  # quest method
+#         par_dict[stim_num]['pThreshold'] = None  # quest method
+#
+#     with open(yaml_file, 'w') as file:
+#         yaml.dump(par_dict, file, default_flow_style=False, sort_keys=False)

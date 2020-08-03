@@ -17,11 +17,6 @@ import sys
 from colorpalette_plus import ColorPicker
 
 
-# from pypixxlib.viewpixx import VIEWPixx, _libdpx
-# my_device = VIEWPixx()
-# my_device.setVideoMode('M16') # Set the right video mode
-# my_device.updateRegisterCache() # Update the device
-
 def run_scrsaver(depthBits):
     mon = monitors.Monitor(name='VIEWPixx LITE', width=38, distance=57)
     mon.setSizePix((1920, 1200))
@@ -56,6 +51,7 @@ def run_scrsaver(depthBits):
             core.quit()
         else:
             time.sleep(3)  # change every 3 sec
+
 
 if __name__ == '__main__':
     run_scrsaver(int(sys.argv[1]))

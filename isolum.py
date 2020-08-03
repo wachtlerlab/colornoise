@@ -2,12 +2,11 @@
 # -*- coding: utf-8 -*-
 
 import numpy as np
-from psychopy import visual, core, event
+from psychopy import visual, event
 import os
 import rgb2sml_plus
 import colorpalette_plus
 import config_tools
-from genconfig import ParReader
 
 
 """get user information"""

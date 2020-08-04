@@ -1,6 +1,6 @@
-<<<<<<< HEAD
+
 ## Project Overview
-=======
+
 
 ---
 
@@ -82,7 +82,6 @@ gantt
 
 
 * Data analysis
->>>>>>> parent of 6775734... Delete README.md
 
 
 ## Codes

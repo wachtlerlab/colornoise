@@ -205,7 +205,7 @@ class Exp:
         self.win.flip()
         core.wait(0.5)
 
-        # then present the standard and the test stimuli as well for 1 sec
+        # then present the standard and the test stimuli as well for
         fix.draw()
         num.draw()
         leftRef.draw()
@@ -455,10 +455,8 @@ def run_exp(subject, par_file_path=None, cfg_file_path=None, res_dir=None, prior
 
 # run_exp(subject='pilot', par_file_path=['config/cn4_quest_LL_a.yaml'], cfg_file_path='config/expconfig_8bit.yaml')
 
-""" 
-run experiment in bash by calling
-"python multinoisecolor10bit.py [subject] [optional par_file] [optional cfg_file] [optional results_dir] [optional priors_file]"
-"""
+
+""" run experiment in bash """
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--subject')

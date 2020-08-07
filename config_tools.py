@@ -68,8 +68,8 @@ def write_cfg(file_path):
         yaml.dump(cfg_dict, file, default_flow_style=False, sort_keys=False)
 
 
-def write_par(file_path, noise, method, seed=42, hue_num=8, min_max=None, start_val=5.0, step_type=None,
-              up_down=None, p_threshold=0.75):
+def write_par(file_path, noise, method, seed=42, hue_num=8, min_max=None, start_val=3.0, step_type=None,
+              up_down=None, p_threshold=0.63):
     """
     Write parameters to a YAML file.
 
@@ -121,7 +121,10 @@ def write_par(file_path, noise, method, seed=42, hue_num=8, min_max=None, start_
         par_dict[stim_num]['leftRef'] = float(x['theta'] + 10)
         par_dict[stim_num]['rightRef'] = float(x['theta'] - 10)
         par_dict[stim_num]['stairType'] = method
-        par_dict[stim_num]['startVal'] = start_val
+        if x['label'] in ['hue_3m', 'hue_3p', 'hue_4m', 'hue_7p', 'hue_8m']:
+            par_dict[stim_num]['startVal'] = 1.0
+        else:
+            par_dict[stim_num]['startVal'] = start_val
         par_dict[stim_num]['min_val'] = x['minVal']
         par_dict[stim_num]['max_val'] = x['maxVal']
 
@@ -133,8 +136,8 @@ def write_par(file_path, noise, method, seed=42, hue_num=8, min_max=None, start_
         par_dict[stim_num]['nDown'] = up_down[1]
 
         """specify for quest method"""
-        par_dict[stim_num]['startValSd'] = 10  # quest method
-        par_dict[stim_num]['pThreshold'] = p_threshold  # quest method
+        par_dict[stim_num]['startValSd'] = 5
+        par_dict[stim_num]['pThreshold'] = p_threshold  # typical value is 0.63, which is equivalent to a 1 up 1 down standard staircase
 
     with open(file_path, 'w') as file:
         yaml.dump(par_dict, file, default_flow_style=False, sort_keys=False)
@@ -266,14 +269,13 @@ def read_value(text_file, keywords, sep=':'):
     lines = file.read().splitlines()
     for word in keywords:
         for line in lines:
-            if line.startswith(word):
+            if line.lstrip().startswith(word):
                 x = line.split(sep)[-1].strip()
                 try:
                     float(x)
                     return float(x)
                 except ValueError:
                     return x
-
 
 # def xpp2yaml(xpp_file, yaml_file):
 #     """

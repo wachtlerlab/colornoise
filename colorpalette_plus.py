@@ -64,7 +64,7 @@ class ColorPicker:
         :param dlum:      change in luminance
         :return:          new gray color sml
         """
-        gray = [gray_sml[0], gray_sml[1] * (1 + dlum), gray_sml * (1 + dlum)]
+        gray = [gray_sml[0], gray_sml[1] * (1 + dlum), gray_sml[2] * (1 + dlum)]
         return gray
 
     def gensml(self, theta, gray=None):
@@ -113,11 +113,12 @@ class ColorPicker:
                 for root, dirs, names in os.walk(basepath):  # show names also in subfolders
                     for name in names:
                         if name.endswith('.isoslant'):
-                            amplitude = config_tools.read_value(name, 'amplitude', sep='=')
-                            phase = config_tools.read_value(name, 'phase', sep='=')
+                            filepath = basepath + '/' + name
+                            # amplitude = config_tools.read_value(filepath, ['amplitude'], sep='=')
+                            # phase = config_tools.read_value(filepath, ['phase'], sep='=')
 
-                            # amplitude = config_tools.read_value(name, 'dl', sep=':')  # for iris-isoslant data
-                            # phase = config_tools.read_value(name, 'phi', sep=':')
+                            amplitude = config_tools.read_value(filepath, ['dl'], sep=':')  # for iris-isoslant data
+                            phase = config_tools.read_value(filepath, ['phi'], sep=':')
 
                             # offset = ParReader(name).find_param(lines, 'offset', '=')
                             # offset = filetools.findparam(lines, 'offset')
@@ -167,7 +168,7 @@ class ColorPicker:
         #        gray[1] * (1.0 - c * np.cos(theta) * lmratio / (1.0 + lmratio)),
         #        gray[2] * (1.0 + c * np.cos(theta) / (1.0 + lmratio))]
 
-    def gencolorlist(self, hue_res):  # TODO: add a 8-bit version if necessary
+    def gencolorlist(self, hue_res):
         """
         Generate colors that are realizable in a 10-bit display and save them in a color list
         :param hue_res: the resolution of hue angles, i.e. hue angle bins
@@ -178,8 +179,8 @@ class ColorPicker:
             raise ValueError("The current depthBits is NOT 10-bit!")
             exit(1)
 
-        theta = np.linspace(0, 360 - 1, int(360 / hue_res))
-        convt = [self.newcolor(x, self.subject) for x in theta]
+        theta = np.linspace(0, 360 - hue_res, int(360 / hue_res))
+        convt = [self.newcolor(theta=x) for x in theta]
         rgb = [x[1] for x in convt]
         rgb_res = 1 / 2 ** 10  # resolution of 10bit in [0, 1] scale
         selrgb = []
@@ -195,11 +196,11 @@ class ColorPicker:
                 next(it)
                 next(it)
 
-        if not os.path.exists('config/config_10bit/colorlist'):
-            os.makedirs('config/config_10bit/colorlist')
-        np.save('config/config_10bit/colorlist/hue-list-10bit-res' + str(hue_res) + '-sub-' + str(self.subject),
-                seltheta)
-        np.save('config/config_10bit/colorlist/rgb-list-10bit-res' + str(hue_res) + '-sub-' + str(self.subject), selrgb)
+        subpath = 'config/colorlist/' + self.subject
+        if not os.path.exists(subpath):
+            os.makedirs(subpath)
+        np.save(subpath + '/hue-list-10bit-res' + str(hue_res) + '-sub-' + str(self.subject), seltheta)
+        np.save(subpath + '/rgb-list-10bit-res' + str(hue_res) + '-sub-' + str(self.subject), selrgb)
 
         return rgb, selrgb, theta, seltheta
 
@@ -264,7 +265,7 @@ class ColorPicker:
 
 
 "example: to show color circle"
-# ColorPicker(depthBits=8).showcolorcircle(numStim=8)
+# ColorPicker(depthBits=8).showcolorcircle(numStim=8)+
 
 "example: to generate hue-list and rgb-list"
 # ColorPicker(depthBits=10).gencolorlist(0.2)

@@ -58,7 +58,6 @@ class Exp:
         self.trial_nmb = self.cfg['trial_nmb']
         self.trial_dur = self.cfg['trial_dur']
         self.depthBits = self.cfg['depthBits']
-        self.hue_list = self.cfg['hue_list']
 
         self.ColorPicker = ColorPicker(c=self.param['c'],
                                        sscale=self.param['sscale'],
@@ -66,6 +65,12 @@ class Exp:
                                        depthBits=self.depthBits,
                                        subject=self.subject)
         self.ColorSpace = self.ColorPicker.colorSpace
+
+        hue_list_path = 'config/colorlist/' + self.subject
+        if not os.path.exists(hue_list_path):
+            self.ColorPicker.gencolorlist(0.2)
+        self.hue_list = hue_list_path + '/hue-list-10bit-res0.2-sub-' + self.subject + '.npy'
+
         self.Csml = self.ColorPicker.Csml
         self.Crgb = self.ColorPicker.Crgb
         self.mon = monitors.Monitor(name=self.cfg['monitor']['name'],
@@ -203,7 +208,7 @@ class Exp:
         leftRef.draw()
         rightRef.draw()
         self.win.flip()
-        core.wait(0.5)
+        core.wait(1.0)
 
         # then present the standard and the test stimuli as well for
         fix.draw()

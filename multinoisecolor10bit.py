@@ -322,10 +322,10 @@ class Exp:
                 if stair_test < 0:
                     stair_test += 360
                 disp_test = self.take_closest(valid_theta, stair_test)
-                disp_intensity = abs(disp_test - disp_standard)
+                disp_intensity = disp_test - disp_standard
                 if disp_intensity > 300:
-                    disp_intensity = 360 - (disp_test + disp_standard)
-                stairs.addResponse(judge, disp_intensity)
+                    disp_intensity = (disp_test + disp_standard) - 360
+                stairs.addResponse(judge, abs(disp_intensity))
 
                 xpp.task(count, cond, rot, float(disp_intensity), judge, trial_time)
 
@@ -369,7 +369,7 @@ class Exp:
 
                     disp_intensity = disp_test - disp_standard  # actual displayed hue difference
                     if disp_intensity > 300:
-                        disp_intensity = 360 - (disp_test + disp_standard)
+                        disp_intensity = (disp_test + disp_standard) - 360
                     cur_handler.addResponse(judge, abs(disp_intensity))  # only positive number is accepted by addResponse
 
                     if len(rot_all_disp) <= handler_idx:  # add displayed intensities

@@ -165,10 +165,6 @@ class Exp:
     """main experiment"""
 
     def run_trial(self, rot, cond, count):
-        # for negative start values in staircases, because *.par files only give abs values
-        if cond['label'].endswith('m'):
-            rot = -rot
-
         # set two reference
         left = cond['leftRef']
         right = cond['rightRef']
@@ -313,6 +309,8 @@ class Exp:
 
             for rot, cond in stairs:
                 count += 1
+                direction = (-1) ** (cond['label'].endswith('m'))  # direction as -1 if for minus stim
+                rot = rot * direction  # rotation for this trial
                 judge, thiskey, trial_time = self.run_trial(rot, cond, count)
 
                 # check whether the theta is valid - if not, the rotation given by staircase should be corrected by
@@ -320,8 +318,7 @@ class Exp:
                 valid_theta = np.round(np.load(self.hue_list), decimals=1)
 
                 disp_standard = self.take_closest(valid_theta, cond['standard'])  # theta actually displayed
-                stair_test = cond['standard'] + stairs._nextIntensity * (-1) ** (
-                    cond['label'].endswith('m'))  # theta for staircase
+                stair_test = cond['standard'] + stairs._nextIntensity * direction
                 if stair_test < 0:
                     stair_test += 360
                 disp_test = self.take_closest(valid_theta, stair_test)
@@ -350,7 +347,8 @@ class Exp:
             for trial_n in range(self.trial_nmb):
                 for handler_idx, cur_handler in enumerate(stairs):
                     count += 1
-                    rot = next(cur_handler)
+                    direction = (-1) ** (cur_handler.extraInfo['label'].endswith('m'))  # direction as -1 if for minus stim
+                    rot = next(cur_handler) * direction  # rotation for this trial
 
                     if len(rot_all) <= handler_idx:
                         rot_all.append([])
@@ -361,25 +359,22 @@ class Exp:
                     if len(judge_all) <= handler_idx:
                         judge_all.append([])
                     judge_all[handler_idx].append(judge)
-                    # cur_handler.addResponse(judge)  # to the next trial
 
                     valid_theta = np.round(np.load(self.hue_list), decimals=1)
-                    disp_standard = self.take_closest(valid_theta, cond['standard'])  # theta actually displayed
-                    stair_test = cond['standard'] + cur_handler._nextIntensity * (-1) ** (
-                        cond['label'].endswith('m'))  # theta for staircase
+                    disp_standard = self.take_closest(valid_theta, cond['standard'])
+                    stair_test = cond['standard'] + direction * cur_handler._nextIntensity # calculated test hue for this trial - although it is called nextIntensity
                     if stair_test < 0:
                         stair_test += 360
-                    disp_test = self.take_closest(valid_theta, stair_test)
-                    disp_intensity = abs(disp_test - disp_standard)
+                    disp_test = self.take_closest(valid_theta, stair_test)  # actual displayed test hue for this trial
+
+                    disp_intensity = disp_test - disp_standard  # actual displayed hue difference
                     if disp_intensity > 300:
                         disp_intensity = 360 - (disp_test + disp_standard)
-                    cur_handler.addResponse(judge, disp_intensity)
+                    cur_handler.addResponse(judge, abs(disp_intensity))  # only positive number is accepted by addResponse
 
                     if len(rot_all_disp) <= handler_idx:  # add displayed intensities
                         rot_all_disp.append([])
                     rot_all_disp[handler_idx].append(disp_intensity)
-
-                    print('stair test: ' + str(stair_test) + ', ' + 'disp_test:' + str(disp_test))
 
                     if isinstance(cur_handler, data.PsiHandler):
                         estimates[cur_handler.extraInfo['label']].append(
@@ -458,7 +453,7 @@ def run_exp(subject, par_file_path=None, cfg_file_path=None, res_dir=None, prior
         #     core.quit()
 
 
-# run_exp(subject='pilot', par_file_path=['config/cn4_quest_LL_a.yaml'], cfg_file_path='config/expconfig_8bit.yaml')
+run_exp(subject='psuedo', par_file_path=['config/cn2_LL_correct.yaml'], cfg_file_path='config/expconfig_8bit.yaml')
 
 
 """ run experiment in bash """

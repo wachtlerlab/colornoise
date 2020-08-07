@@ -126,6 +126,7 @@ class ColorPicker:
                             # sub_dlum = dlum + amplitude * np.sin(theta + phase) + offset
                             sub_dlum = dlum + amplitude * np.sin(theta + phase)
             else:
+                sub_dlum = 0
                 warnings.warn("No isoslant file is found for this subject! "
                               "Results without subjective adjustment will be given.")
         else:

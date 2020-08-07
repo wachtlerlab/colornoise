@@ -49,7 +49,6 @@ def write_cfg(file_path):
     cfg_dict['monitor']['width'] = 48.4
     cfg_dict['monitor']['distance'] = 57
     cfg_dict['depthBits'] = 10
-    cfg_dict['hue_list'] = 'config/colorlist/hue-list-10bit-res0.2-sub-None.npy'
 
     cfg_dict['patch_nmb'] = 16
     cfg_dict['patch_size'] = 0.75
@@ -94,9 +93,6 @@ def write_par(file_path, noise, method, seed=42, hue_num=8, min_max=None, start_
     stimulus = [dict() for x in range(len(theta) * 2)]
     for idx, x in enumerate(np.repeat(theta, 2)):
         idx += 1
-        stimulus[idx - 1]['theta'] = x
-        stimulus[idx - 1]['minVal'] = min_max[0]
-        stimulus[idx - 1]['maxVal'] = min_max[1]
         if idx % 2:
             stimulus[idx - 1]['label'] = 'hue_' + str(int((idx + 1) / 2)) + 'p'
         else:

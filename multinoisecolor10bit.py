@@ -100,6 +100,7 @@ class Exp:
     def patch_stim(self):  # standard and test stimuli
         patch = visual.ElementArrayStim(win=self.win,
                                         units='deg',
+                                        fieldSize=self.cfg['field_size'],
                                         nElements=self.patch_nmb,
                                         elementMask='circle',
                                         elementTex=None,
@@ -109,7 +110,7 @@ class Exp:
 
     def patch_pos(self, xlim, ylim):  # position of standard and test stimuli
         n = int(np.sqrt(self.patch_nmb))
-        pos = [(x, y)
+        pos = [[x, y]
                for x in np.linspace(xlim[0], xlim[1], n)
                for y in np.linspace(ylim[0], ylim[1], n)]
         return pos
@@ -426,7 +427,7 @@ def run_exp(subject, par_file_path=None, cfg_file_path=None, res_dir=None, prior
     if par_file_path:
         par_files = par_file_path
     else:
-        par_files = ['config/parameter_example.yaml']  # change the file list as you wish
+        sys.exit("Please set experiment parameters!")
 
     if cfg_file_path is None:
         cfg_file_path = ['config/expconfig.yaml']
@@ -453,7 +454,7 @@ def run_exp(subject, par_file_path=None, cfg_file_path=None, res_dir=None, prior
         #     core.quit()
 
 
-run_exp(subject='psuedo', par_file_path=['config/cn2_LL_correct.yaml'], cfg_file_path='config/expconfig_8bit.yaml')
+# run_exp(subject='psuedo', par_file_path=['config/cn2_LL_correct.yaml'], cfg_file_path='config/expconfig_8bit.yaml')
 
 
 """ run experiment in bash """

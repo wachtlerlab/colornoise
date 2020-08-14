@@ -29,7 +29,7 @@ class ColorPicker:
             - display a color circle
 
         :param gray_level: default is 0.66
-        :param c: contrast (i.e. chromaticity since we use iso-luminance); no larger than 0.155; default is 0.12
+        :param c: contrast (i.e. chromaticity since we use iso-luminance); no larger than 0.32; default is 0.12
         :param sscale: just for better viewing, usually no need to change; default is 2.6
         :param unit: hue angle unit: radian[default] or degree
         :param depthBits: color depth: 8[default] or 10 

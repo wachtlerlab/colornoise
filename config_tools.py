@@ -53,6 +53,7 @@ def write_cfg(file_path):
     cfg_dict['patch_nmb'] = 16
     cfg_dict['patch_size'] = 0.75
     cfg_dict['ref_size'] = 0.8
+    cfg_dict['field_size'] = [4.0, 4.0]
     cfg_dict['leftRef.pos'] = [-5, 2.5]
     cfg_dict['rightRef.pos'] = [5, 2.5]
     cfg_dict['standard.xlim'] = [-1.5, 1.5]
@@ -85,7 +86,7 @@ def write_par(file_path, noise, method, seed=42, hue_num=8, min_max=None, start_
     """
 
     if min_max is None:
-        min_max = [0.2, 10]
+        min_max = [0.2, 10.0]
     if up_down is None:
         up_down = [None, None]
     """generate stimuli"""
@@ -93,6 +94,7 @@ def write_par(file_path, noise, method, seed=42, hue_num=8, min_max=None, start_
     stimulus = [dict() for x in range(len(theta) * 2)]
     for idx, x in enumerate(np.repeat(theta, 2)):
         idx += 1
+        stimulus[idx-1]['theta'] = x
         if idx % 2:
             stimulus[idx - 1]['label'] = 'hue_' + str(int((idx + 1) / 2)) + 'p'
         else:
@@ -117,12 +119,13 @@ def write_par(file_path, noise, method, seed=42, hue_num=8, min_max=None, start_
         par_dict[stim_num]['leftRef'] = float(x['theta'] + 10)
         par_dict[stim_num]['rightRef'] = float(x['theta'] - 10)
         par_dict[stim_num]['stairType'] = method
-        if x['label'] in ['hue_3m', 'hue_3p', 'hue_4m', 'hue_7p', 'hue_8m']:
-            par_dict[stim_num]['startVal'] = 1.0
-        else:
-            par_dict[stim_num]['startVal'] = start_val
-        par_dict[stim_num]['min_val'] = x['minVal']
-        par_dict[stim_num]['max_val'] = x['maxVal']
+        # if x['label'] in ['hue_3m', 'hue_3p', 'hue_4m', 'hue_7p', 'hue_8m']:
+        #     par_dict[stim_num]['startVal'] = 1.0
+        # else:
+        #     par_dict[stim_num]['startVal'] = start_val
+        par_dict[stim_num]['startVal'] = start_val
+        par_dict[stim_num]['min_val'] = min_max[0]
+        par_dict[stim_num]['max_val'] = min_max[1]
 
         """specify for simple method"""
         par_dict[stim_num]['stepType'] = step_type
@@ -132,7 +135,7 @@ def write_par(file_path, noise, method, seed=42, hue_num=8, min_max=None, start_
         par_dict[stim_num]['nDown'] = up_down[1]
 
         """specify for quest method"""
-        par_dict[stim_num]['startValSd'] = 5
+        par_dict[stim_num]['startValSd'] = 10
         par_dict[stim_num]['pThreshold'] = p_threshold  # typical value is 0.63, which is equivalent to a 1 up 1 down standard staircase
 
     with open(file_path, 'w') as file:

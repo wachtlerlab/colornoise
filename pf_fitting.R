@@ -2,25 +2,19 @@
 #install.packages('quickpsy')
 #install.packages('dplyr')
 
+#install.packages('circular')
 library(readxl)
 library(quickpsy)
 library(dplyr)
 library(openxlsx)
-library(reticulate)
 library(ggpubr)
+#library(circular)
 
-# TDDO: add python complie module and color codes for plotting
-#source('colorpalette_plus.py')
-
-#color4plot <- function (num){
-#    colorcodes = ColorPicker().circolors(numStim=num)
-#    return [x / 255 for x in colorcodes]
-#}
 
 
 # import and merge data
-fit_pf <- function (subject, all_files=FALSE, plot=TRUE){
-  if (!all_files) {
+fit_pf <- function (subject, all_files, plot=TRUE){
+  if (missing(all_files)) {
     all_files <- list.files(path= paste0("data/", subject), pattern = "*.xlsx", full.names = T)
   }
 
@@ -35,6 +29,10 @@ fit_pf <- function (subject, all_files=FALSE, plot=TRUE){
 
   fit_list <- list()
   gg_list <- list()
+
+  #color2plot <- (x <- structure(rep(circular.colors(n=length(data)/2, m=pi/2, M=2*pi), each=2),
+  #                              names=names(data)))
+
   for (label in names(data)){
     df <- dplyr::select(data[[label]], All.Intensities, All.Responses)  # extract data for fitting
     df_grp <- merge(dplyr::count(df, All.Intensities),  # the total number of trials for each intensity
@@ -45,15 +43,23 @@ fit_pf <- function (subject, all_files=FALSE, plot=TRUE){
     gg_list[[label]] <-  ggplot(fit_list[[label]]$curves, aes(x, y)) + geom_line()
     gg_list[[label]] <-  ggplot() +
       geom_line(fit_list[[label]]$curves, mapping = aes(x, y)) +
-      geom_point(fit_list[[label]]$averages, mapping = aes(All.Intensities, prob)) +
+      geom_point(fit_list[[label]]$averages, mapping = aes(All.Intensities, prob), color='grey') +
       geom_vline(xintercept = fit_list[[label]]$thresholds$thre, linetype='dashed') +
-      geom_hline(yintercept = fit_list[[label]]$thresholds$prob, linetype='dashed')
+      geom_hline(yintercept = fit_list[[label]]$thresholds$prob, linetype='dashed') +
+      ylim(0.5, 1.0) +
+      xlim(0, 6)
 
-    #gg_list[[label]] <- ggline(fit_list[[label]]$curves, "x", "y")
   }
+
+  title_list <- list()
+  for (i in seq_along(fit_list)){
+    title_list[i]<- paste(names(fit_list)[i], round(fit_list[[i]]$thresholds$thre, digits = 2), sep = ':')
+  }
+
   if (plot){
-    ggarrange(plotlist=gg_list, widths = c(4,4), labels = names(gg_list))
+    ggarrange(plotlist=gg_list, widths = c(4,4), labels = title_list)
   }
 }
 
-fit_pf("pilot", all_files=FALSE, plot=TRUE)
+# example
+fit_pf("ysu", plot=TRUE)

@@ -97,6 +97,7 @@ The experiment stimuli can be implemented by 8-bit or 10-bit color depths.
 | config_tools | write and read experiment config files | write_cfg, write_par, WriteXpp, write_xrl, read_yml |
 | multinoisecolor10bit | excute the color noise experiment in 10-bit color depths| Exp, run_exp |
 | screensaver | screen-protect program in a colored board patten | run_scrsaver |
+| exploredata/pf_fitting.R | for preliminary data analysis (psychometric function fitting) | fitpf |
 
 ## Data structure
 ```
@@ -105,7 +106,12 @@ experiment directory
 └───config
 |   |   expconfig.yaml    # experiment config YAML
 │   │   parameter.yaml    # parameter YAML
-│   
+│   └───colorlist         
+│       └───subject       # lists of all achievable colors for this subject
+│ 
+└───isolum  
+│   └───subject           # isoluminance measurement output for this subject
+|
 └───data
 │   └───subject
 |       |  subject_20200000T0000.yaml  # single session log YAML

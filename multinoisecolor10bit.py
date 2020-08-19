@@ -147,6 +147,7 @@ class Exp:
 
     """tool fucntion"""
 
+
     def take_closest(self, arr, val):
         """
         Assumes arr is sorted. Returns closest value to val (could be itself).
@@ -237,6 +238,8 @@ class Exp:
         self.win.flip()
         kb = keyboard.Keyboard()
         if kb.getKeys(['escape']):
+            breakinfo = 'userbreak'
+            config_tools.write_xrl(self.subject, break_info='userbreak')
             core.quit()
         else:
             core.wait(0.5)
@@ -255,7 +258,6 @@ class Exp:
                     thiskey = key
                 elif key == 'escape':
                     breakinfo = 'userbreak'
-                    # xrl.add_break(breakinfo)
                     config_tools.write_xrl(self.subject, break_info='userbreak')
                     core.quit()
         trial_time = time.time() - trial_time_start

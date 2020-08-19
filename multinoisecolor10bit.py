@@ -7,9 +7,9 @@
 This module contains functions for running color-noise experiments (in 10-bit color depth).
 
 Run experiment by running in Python3.7:
-    run_exp(subject, par_file_path[optional], cfg_file_path[optional], res_dir[optional], priors_file_path[optional])
+    run_exp(subject, par_file_path, cfg_file_path[optional], res_dir[optional], priors_file_path[optional])
 Or in bash:
-    python3.7 multinoisecolor10bit.py [subject] [optional par_file] [optional cfg_file] [optional results_dir] [optional priors_file]
+    python3.7 multinoisecolor10bit.py [subject] [par_file] [optional cfg_file] [optional results_dir] [optional priors_file]
 
 Running experiments requires config files in config folder:
     config/experiment_config.yaml   - experiment config file
@@ -26,6 +26,7 @@ It saves results in data folder:
 import numpy as np
 import time
 from psychopy import visual, data, core, event, monitors, misc
+from psychopy.hardware import keyboard
 import os
 from colorpalette_plus import ColorPicker
 import config_tools
@@ -199,7 +200,8 @@ class Exp:
                               color='black', colorSpace=self.ColorSpace)
 
         trial_time_start = time.time()
-        # first present references for 0.5 sec
+
+        # first present references
         fix.draw()
         num.draw()
         leftRef.draw()
@@ -207,7 +209,7 @@ class Exp:
         self.win.flip()
         core.wait(1.0)
 
-        # then present the standard and the test stimuli as well for
+        # then present the standard and the test stimuli as well
         fix.draw()
         num.draw()
         leftRef.draw()
@@ -220,13 +222,28 @@ class Exp:
             # show stimuli for some time
             core.wait(self.trial_dur)
 
-            # refresh the window, clear references and stimuli
-            num.draw()
-            self.win.flip()
+        # refresh the window and show a colored checker board
+        self.win.flip()
+        horiz_n = np.random.randint(5, high=10)
+        vertic_n = np.random.randint(5, high=10)
+        rect = visual.ElementArrayStim(self.win, units='norm', nElements=horiz_n * vertic_n, elementMask=None, elementTex=None,
+                                           sizes=(2 / horiz_n, 2 / vertic_n), colorSpace=self.ColorSpace)
+        rect.xys = [(x, y) for x in np.linspace(-1, 1, horiz_n, endpoint=False) + 1 / horiz_n
+                    for y in np.linspace(-1, 1, vertic_n, endpoint=False) + 1 / vertic_n]
+
+        rect.colors = [self.ColorPicker.newcolor(x)[1] for x in
+                           np.random.randint(0, high=360, size=horiz_n * vertic_n)]
+        rect.draw()
+        self.win.flip()
+        kb = keyboard.Keyboard()
+        if kb.getKeys(['escape']):
+            core.quit()
+        else:
+            core.wait(0.5)
+        self.win.flip()
 
         # get response
         judge = None
-
         while judge is None:
             allkeys = event.waitKeys()
             for key in allkeys:
@@ -241,7 +258,6 @@ class Exp:
                     # xrl.add_break(breakinfo)
                     config_tools.write_xrl(self.subject, break_info='userbreak')
                     core.quit()
-
         trial_time = time.time() - trial_time_start
 
         return judge, thiskey, trial_time
@@ -251,6 +267,9 @@ class Exp:
         path = os.path.join(self.res_dir, self.subject)
         if not os.path.exists(path):
             os.makedirs(path)
+        psydat_path = os.path.join(path, 'psydat')
+        if not os.path.exists(psydat_path):
+            os.makedirs(psydat_path)
 
         # welcome
         msg = visual.TextStim(self.win, 'Welcome!' + '\n' + ' Press any key to start this session :)', color='black',
@@ -334,8 +353,7 @@ class Exp:
 
             config_tools.write_xrl(self.subject, xls_file=xlsname)
             stairs.saveAsExcel(xlsname)  # save results
-            psydat_file_path = os.path.join(path, "psydat", self.idx + self.param['condition'] + '.psydat')  # save the handler into a psydat-file
-            misc.toFile(psydat_file_path, stairs)
+            misc.toFile(os.path.join(psydat_path, self.idx + self.param['condition'] + '.psydat'), stairs)
 
         elif isinstance(stairs, list):
             # start running the staircase using custom interleaving stairs for the quest and psi methods
@@ -416,8 +434,7 @@ class Exp:
 
             # save each handler into a psydat-file and save posterior into a numpy-file
             for cur_handler in stairs:
-                file_name = os.path.join(path,
-                                         self.idx + self.param['noise_condition'] + cur_handler.extraInfo['label'])
+                file_name = os.path.join(psydat_path, self.idx + self.param['noise_condition'] + cur_handler.extraInfo['label'])
                 misc.toFile(file_name + '.psydat', cur_handler)
                 if isinstance(cur_handler, data.PsiHandler):
                     cur_handler.savePosterior(file_name + '.npy')

@@ -492,7 +492,7 @@ def run_exp(subject, par_file_path=None, cfg_file_path=None, res_dir=None, prior
         #     core.quit()
 
 
-run_exp(subject='psuedo', par_file_path=['config/cn2_LL_correct.yaml'], cfg_file_path='config/expconfig_8bit.yaml')
+# run_exp(subject='psuedo', par_file_path=['config/cn2_LL_correct.yaml'], cfg_file_path='config/expconfig_8bit.yaml')
 
 """ run experiment in bash """
 if __name__ == '__main__':

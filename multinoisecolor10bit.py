@@ -147,7 +147,6 @@ class Exp:
 
     """tool fucntion"""
 
-
     def take_closest(self, arr, val):
         """
         Assumes arr is sorted. Returns closest value to val (could be itself).
@@ -194,14 +193,13 @@ class Exp:
         tPatch.xys = self.patch_pos(self.cfg['test.xlim'], rndpos[1])
 
         # fixation cross
-        fix = visual.TextStim(self.win, text="+", units='deg', pos=[0, 0], height=0.4, color='black',
+        fix = visual.TextStim(self.win, text="+", units='deg', pos=[0, 0], height=0.5, color='black',
                               colorSpace=self.ColorSpace)
         # number of trial
         num = visual.TextStim(self.win, text="trial " + str(count), units='deg', pos=[12, -10], height=0.4,
                               color='black', colorSpace=self.ColorSpace)
 
         trial_time_start = time.time()
-
         # first present references
         fix.draw()
         num.draw()
@@ -218,51 +216,63 @@ class Exp:
         sPatch.draw()
         tPatch.draw()
         self.win.flip()
+        core.wait(self.trial_dur)
 
-        if self.trial_dur:
-            # show stimuli for some time
-            core.wait(self.trial_dur)
-
-        # refresh the window and show a colored checker board
+        fix.draw()
         self.win.flip()
+        core.wait(0.2)  # 0.2 sec gray background
+        react_time_start = time.time()
+
+        # refresh the window and show a colored checkerboard
         horiz_n = np.random.randint(5, high=10)
         vertic_n = np.random.randint(5, high=10)
-        rect = visual.ElementArrayStim(self.win, units='norm', nElements=horiz_n * vertic_n, elementMask=None, elementTex=None,
-                                           sizes=(2 / horiz_n, 2 / vertic_n), colorSpace=self.ColorSpace)
+        rect = visual.ElementArrayStim(self.win, units='norm', nElements=horiz_n * vertic_n, elementMask=None,
+                                       elementTex=None,
+                                       sizes=(2 / horiz_n, 2 / vertic_n), colorSpace=self.ColorSpace)
         rect.xys = [(x, y) for x in np.linspace(-1, 1, horiz_n, endpoint=False) + 1 / horiz_n
                     for y in np.linspace(-1, 1, vertic_n, endpoint=False) + 1 / vertic_n]
 
         rect.colors = [self.ColorPicker.newcolor(x)[1] for x in
-                           np.random.randint(0, high=360, size=horiz_n * vertic_n)]
+                       np.random.randint(0, high=360, size=horiz_n * vertic_n)]
         rect.draw()
         self.win.flip()
+        core.wait(0.5)  # 0.5 sec checkerboard
+
+        judge = None
+        react_time_stop = -1
         kb = keyboard.Keyboard()
-        if kb.getKeys(['escape']):
-            breakinfo = 'userbreak'
+        get_keys = kb.getKeys(['right', 'left', 'escape'])  # if response during the checkerboard
+        if ('left' in get_keys and rot * rndpos[0][0] > 0) or ('right' in get_keys and rot * rndpos[0][0] < 0):
+            judge = 1  # correct
+            react_time_stop = time.time()
+        elif ('left' in get_keys and rot * rndpos[0][0] < 0) or ('right' in get_keys and rot * rndpos[0][0] > 0):
+            judge = 0  # incorrect
+            react_time_stop = time.time()
+        if 'escape' in get_keys:
             config_tools.write_xrl(self.subject, break_info='userbreak')
             core.quit()
-        else:
-            core.wait(0.5)
+
+        self.win.flip()
+        fix.draw()
         self.win.flip()
 
-        # get response
-        judge = None
-        while judge is None:
-            allkeys = event.waitKeys()
-            for key in allkeys:
-                if (key == 'left' and rot * rndpos[0][0] > 0) or (key == 'right' and rot * rndpos[0][0] < 0):
+        if judge is None:  # if response after the checkerboard
+            for wait_keys in event.waitKeys():
+                if (wait_keys == 'left' and rot * rndpos[0][0] > 0) or (
+                        wait_keys == 'right' and rot * rndpos[0][0] < 0):
                     judge = 1  # correct
-                    thiskey = key
-                elif (key == 'left' and rot * rndpos[0][0] < 0) or (key == 'right' and rot * rndpos[0][0] > 0):
+                    react_time_stop = time.time()
+                elif (wait_keys == 'left' and rot * rndpos[0][0] < 0) or (
+                        wait_keys == 'right' and rot * rndpos[0][0] > 0):
                     judge = 0  # incorrect
-                    thiskey = key
-                elif key == 'escape':
-                    breakinfo = 'userbreak'
+                    react_time_stop = time.time()
+                elif wait_keys == 'left' == 'escape':
                     config_tools.write_xrl(self.subject, break_info='userbreak')
                     core.quit()
-        trial_time = time.time() - trial_time_start
 
-        return judge, thiskey, trial_time
+        react_time = react_time_stop - react_time_start
+
+        return judge, react_time, trial_time_start
 
     def run_session(self):
 
@@ -300,7 +310,7 @@ class Exp:
                     prior_handler = None
                 cur_handler = data.QuestHandler(cond['startVal'], cond['startValSd'], pThreshold=cond['pThreshold'],
                                                 nTrials=self.trial_nmb, minVal=cond['min_val'], maxVal=cond['max_val'],
-                                                staircase=prior_handler, extraInfo=cond)
+                                                staircase=prior_handler, extraInfo=cond, grain=0.1)
                 stairs.append(cur_handler)
         elif conditions[0]['stairType'] == 'psi':
             stairs = []
@@ -333,7 +343,7 @@ class Exp:
                 count += 1
                 direction = (-1) ** (cond['label'].endswith('m'))  # direction as -1 if for minus stim
                 rot = rot * direction  # rotation for this trial
-                judge, thiskey, trial_time = self.run_trial(rot, cond, count)
+                judge, react_time, trial_time_start = self.run_trial(rot, cond, count)
 
                 # check whether the theta is valid - if not, the rotation given by staircase should be corrected by
                 # realizable values
@@ -349,13 +359,15 @@ class Exp:
                     disp_intensity = (disp_test + disp_standard) - 360
                 stairs.addResponse(judge, abs(disp_intensity))
 
-                xpp.task(count, cond, rot, float(disp_intensity), judge, trial_time)
+                xpp.task(count, cond, rot, float(disp_intensity), judge, react_time, trial_time_start)
 
-                event.waitKeys(keyList=[thiskey])  # press the response key again to start the next trial
+                if 'escape' in event.waitKeys():
+                    config_tools.write_xrl(self.subject, break_info='userbreak')
+                    core.quit()
 
             config_tools.write_xrl(self.subject, xls_file=xlsname)
             stairs.saveAsExcel(xlsname)  # save results
-            misc.toFile(os.path.join(psydat_path, self.idx + self.param['condition'] + '.psydat'), stairs)
+            misc.toFile(os.path.join(psydat_path, self.idx + self.param['noise_condition'] + '.psydat'), stairs)
 
         elif isinstance(stairs, list):
             # start running the staircase using custom interleaving stairs for the quest and psi methods
@@ -368,14 +380,15 @@ class Exp:
             for trial_n in range(self.trial_nmb):
                 for handler_idx, cur_handler in enumerate(stairs):
                     count += 1
-                    direction = (-1) ** (cur_handler.extraInfo['label'].endswith('m'))  # direction as -1 if for minus stim
+                    direction = (-1) ** (
+                        cur_handler.extraInfo['label'].endswith('m'))  # direction as -1 if for minus stim
                     rot = next(cur_handler) * direction  # rotation for this trial
 
                     if len(rot_all) <= handler_idx:
                         rot_all.append([])
                     rot_all[handler_idx].append(rot)
                     cond = cur_handler.extraInfo
-                    judge, thiskey, trial_time = self.run_trial(rot, cond, count)
+                    judge, react_time, trial_time_start = self.run_trial(rot, cond, count)
 
                     if len(judge_all) <= handler_idx:
                         judge_all.append([])
@@ -383,7 +396,8 @@ class Exp:
 
                     valid_theta = np.round(np.load(self.hue_list), decimals=1)
                     disp_standard = self.take_closest(valid_theta, cond['standard'])
-                    stair_test = cond['standard'] + direction * cur_handler._nextIntensity # calculated test hue for this trial - although it is called nextIntensity
+                    stair_test = cond[
+                                     'standard'] + direction * cur_handler._nextIntensity  # calculated test hue for this trial - although it is called nextIntensity
                     if stair_test < 0:
                         stair_test += 360
                     disp_test = self.take_closest(valid_theta, stair_test)  # actual displayed test hue for this trial
@@ -391,7 +405,8 @@ class Exp:
                     disp_intensity = disp_test - disp_standard  # actual displayed hue difference
                     if disp_intensity > 300:
                         disp_intensity = (disp_test + disp_standard) - 360
-                    cur_handler.addResponse(judge, abs(disp_intensity))  # only positive number is accepted by addResponse
+                    cur_handler.addResponse(judge,
+                                            abs(disp_intensity))  # only positive number is accepted by addResponse
 
                     if len(rot_all_disp) <= handler_idx:  # add displayed intensities
                         rot_all_disp.append([])
@@ -408,8 +423,11 @@ class Exp:
                              cur_handler.mode(),
                              cur_handler.quantile(0.5)])
 
-                    xpp.task(count, cond, rot, disp_intensity, judge, trial_time)
-                    event.waitKeys(keyList=[thiskey])  # press the response key again to start the next trial
+                    xpp.task(count, cond, rot, disp_intensity, judge, react_time, trial_time_start)
+
+                    if 'escape' in event.waitKeys():
+                        config_tools.write_xrl(self.subject, break_info='userbreak')
+                        core.quit()
 
             config_tools.write_xrl(self.subject, xls_file=xlsname)
 
@@ -436,7 +454,8 @@ class Exp:
 
             # save each handler into a psydat-file and save posterior into a numpy-file
             for cur_handler in stairs:
-                file_name = os.path.join(psydat_path, self.idx + self.param['noise_condition'] + cur_handler.extraInfo['label'])
+                file_name = os.path.join(psydat_path,
+                                         self.idx + self.param['noise_condition'] + cur_handler.extraInfo['label'])
                 misc.toFile(file_name + '.psydat', cur_handler)
                 if isinstance(cur_handler, data.PsiHandler):
                     cur_handler.savePosterior(file_name + '.npy')
@@ -473,8 +492,7 @@ def run_exp(subject, par_file_path=None, cfg_file_path=None, res_dir=None, prior
         #     core.quit()
 
 
-# run_exp(subject='psuedo', par_file_path=['config/cn2_LL_correct.yaml'], cfg_file_path='config/expconfig_8bit.yaml')
-
+run_exp(subject='psuedo', par_file_path=['config/cn2_LL_correct.yaml'], cfg_file_path='config/expconfig_8bit.yaml')
 
 """ run experiment in bash """
 if __name__ == '__main__':
@@ -492,4 +510,3 @@ if __name__ == '__main__':
     results_dir = args.results_dir
     priors_file = args.priors_file
     run_exp(subject, par_file, cfg_file, results_dir, priors_file)
-

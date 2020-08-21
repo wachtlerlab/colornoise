@@ -176,7 +176,7 @@ class WriteXpp:
         yaml.safe_dump({**info, **cfg_dict, **par_dict}, self.f, default_flow_style=False, sort_keys=False)
         return self.file_path
 
-    def task(self, count, cond, rot, disp_intensity, judge, t):
+    def task(self, count, cond, rot, disp_intensity, judge, react_time, trial_stamp):
         """
         Append log of every single trials in iterations to this log file.
 
@@ -198,7 +198,8 @@ class WriteXpp:
         trial_dict[this_trial]['calculated_intensity'] = float(rot)
         trial_dict[this_trial]['actual_intensity'] = float(round(disp_intensity, 1))
         trial_dict[this_trial]['judge'] = judge
-        trial_dict[this_trial]['time'] = t
+        trial_dict[this_trial]['react_time'] = react_time
+        trial_dict[this_trial]['trial_time_stamp'] = trial_stamp
         yaml.safe_dump(trial_dict, self.f, default_flow_style=False, sort_keys=False)
         self.f.flush()
 

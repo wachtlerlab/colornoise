@@ -224,8 +224,8 @@ class Exp:
         react_time_start = time.time()
 
         # refresh the window and show a colored checkerboard
-        horiz_n = np.random.randint(5, high=10)
-        vertic_n = np.random.randint(5, high=10)
+        horiz_n = 30
+        vertic_n = 20
         rect = visual.ElementArrayStim(self.win, units='norm', nElements=horiz_n * vertic_n, elementMask=None,
                                        elementTex=None,
                                        sizes=(2 / horiz_n, 2 / vertic_n), colorSpace=self.ColorSpace)
@@ -310,7 +310,7 @@ class Exp:
                     prior_handler = None
                 cur_handler = data.QuestHandler(cond['startVal'], cond['startValSd'], pThreshold=cond['pThreshold'],
                                                 nTrials=self.trial_nmb, minVal=cond['min_val'], maxVal=cond['max_val'],
-                                                staircase=prior_handler, extraInfo=cond, grain=0.1)
+                                                staircase=prior_handler, extraInfo=cond, grain=0.02)
                 stairs.append(cur_handler)
         elif conditions[0]['stairType'] == 'psi':
             stairs = []
@@ -382,7 +382,13 @@ class Exp:
                     count += 1
                     direction = (-1) ** (
                         cur_handler.extraInfo['label'].endswith('m'))  # direction as -1 if for minus stim
-                    rot = next(cur_handler) * direction  # rotation for this trial
+
+                    if trial_n == np.ceil(self.trial_nmb*0.5) or trial_n == np.ceil(self.trial_nmb*2/3):  # after 1/2 and 2/3 sessions, slightly change the rotation for this trial
+                        rot = (cur_handler._nextIntensity + 1) * direction
+                        # print(cur_handler._nextIntensity * direction)
+                        # print(rot)
+                    else:
+                        rot = cur_handler._nextIntensity * direction  # rotation for this trial
 
                     if len(rot_all) <= handler_idx:
                         rot_all.append([])
@@ -396,8 +402,7 @@ class Exp:
 
                     valid_theta = np.round(np.load(self.hue_list), decimals=1)
                     disp_standard = self.take_closest(valid_theta, cond['standard'])
-                    stair_test = cond[
-                                     'standard'] + direction * cur_handler._nextIntensity  # calculated test hue for this trial - although it is called nextIntensity
+                    stair_test = cond['standard'] + rot  # calculated test hue for this trial - although it is called nextIntensity
                     if stair_test < 0:
                         stair_test += 360
                     disp_test = self.take_closest(valid_theta, stair_test)  # actual displayed test hue for this trial
@@ -468,7 +473,7 @@ def run_exp(subject, par_file_path=None, cfg_file_path=None, res_dir=None, prior
         sys.exit("Please set experiment parameters!")
 
     if cfg_file_path is None:
-        cfg_file_path = ['config/expconfig.yaml']
+        cfg_file_path = 'config/expconfig.yaml'
 
     for count, pf in enumerate(par_files):
         Exp(subject, pf, cfg_file_path, res_dir, priors_file_path).run_session()  # run one session

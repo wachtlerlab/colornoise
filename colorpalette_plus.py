@@ -1,10 +1,8 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
 
-# python version 3.5.2
-
 """
-THis module generates sml and RGB values with hue angles on an iso-luminance plane, and vice versa.
+This module generates sml and RGB values with hue angles on an iso-luminance plane, and vice versa.
 Main module: ColorPicker
 
 @author: yannansu
@@ -23,21 +21,21 @@ class ColorPicker:
         Color Picker for generating sml and RGB values with hue angles on an iso-luminance plane, and vice versa.
 
         Advanced features:
-            - switch color depths;
-            - adjust the iso-luminance plane for single subjects;
+            - switch color depths
+            - adjust the iso-luminance plane for single subjects
             - generate display-realizable hue lists
             - display a color circle
 
-        :param gray_level: default is 0.66
-        :param c: contrast (i.e. chromaticity since we use iso-luminance); no larger than 0.32; default is 0.12
-        :param sscale: just for better viewing, usually no need to change; default is 2.6
-        :param unit: hue angle unit: radian[default] or degree
-        :param depthBits: color depth: 8[default] or 10 
-        :param subject: perform subjective adjustment if not None. Subject isolum files will be searched and used.
+        :param gray_level: default is 0.66; actually is not used by any functions (?)
+        :param c:          contrast (i.e. chromaticity since we use iso-luminance); no larger than 0.32; default is 0.12
+        :param sscale:     chromatic scaling along S-axis relative to L-M axis to make all stimuli look more salient; default is 2.6
+        :param unit:       hue angle unit: radian[default] or degree
+        :param depthBits:  color depth: 8[default] or 10
+        :param subject:    perform subjective adjustment if not None. Subject isolum files will be searched and used.
         """
-        self.gray_level = gray_level  # this is determined from the calibration file (rgb2lms)
+        self.gray_level = gray_level  # determined from the calibration file (rgb2lms)
         self.c = c
-        self.sscale = sscale  # 
+        self.sscale = sscale
         self.unit = unit
         self.depthBits = depthBits  # 8 or 10-bit
         self.subject = subject
@@ -59,7 +57,8 @@ class ColorPicker:
 
     def gengray(self, gray_sml, dlum):
         """
-        Change gray colors by changing luminance
+        Change gray colors by changing luminance.
+
         :param gray_sml:  gray color sml
         :param dlum:      change in luminance
         :return:          new gray color sml
@@ -67,9 +66,14 @@ class ColorPicker:
         gray = [gray_sml[0], gray_sml[1] * (1 + dlum), gray_sml[2] * (1 + dlum)]
         return gray
 
-    def gensml(self, theta, gray=None):
+    def gensml(self, theta, gray=None, iris=False):
         """
         Generate any color sml value given the angle - WITHOUT subjective adjustment.
+        The transfomration follows:
+            s = s_gray * (1 + contrast * sin(theta) * sscale)
+            (l-m) = (l-m)_gray * (1 + contrast * cos(theta))
+            l+m = l_gray + m_gray
+
         :param theta: hue angle
         :param gray: alternative gray sml values if not None
         :return: sml values
@@ -80,14 +84,22 @@ class ColorPicker:
             gray = self.Csml
 
         lmratio = 1 * gray[2] / gray[1]  # this ratio can be adjusted
-        sml = [gray[0] * (1.0 + self.sscale * self.c * np.sin(theta)),
-               gray[1] * (1.0 - self.c * np.cos(theta) * lmratio / (1.0 + lmratio)),
-               gray[2] * (1.0 + self.c * np.cos(theta) / (1.0 + lmratio))]
+
+        if iris is True:
+            #TODO: discuss and understand the transformation used in iris-tool dkl::iso_lum
+            sml = [gray[0] * (1.0 + self.sscale * self.c * np.sin(theta)),
+                   gray[1] * (1.0 - self.c / (1.0 + 1/lmratio) * np.cos(theta)),
+                   gray[2] * (1.0 + self.c / (1.0 + lmratio)  * np.cos(theta))]
+        elif iris is False:
+            sml = [gray[0] * (1.0 + self.sscale * self.c * np.sin(theta)),
+                   gray[1] * (1.0 + self.c * np.cos(theta) * (1.0 - lmratio)),
+                   gray[2] * (1.0 + self.c * np.cos(theta) * (1.0 - 1/lmratio))]
         return sml
 
     def genrgb(self, theta, gray=None):
         """
         Generate any color RGB value given the angle - WITHOUT subjective adjustment.
+
         :param theta: hue angle
         :param gray: alternative gray sml values if not None
         :return: RGB values
@@ -100,63 +112,74 @@ class ColorPicker:
     def newcolor(self, theta, dlum=0):
         """
         Generate any new color sml and rgb values - can have subjective adjustment.
+
         :param theta: hue angle (radian[default] or degree)
         :param dlum: relative luminance change from the default gray color
-        :return: sml and grb values
+        :return: sml and rgb values
         """
         gray = self.gengray(self.Csml, dlum)
+        sub_dlum = dlum
 
         if self.subject is not None:
             basepath = 'isolum/' + self.subject
 
             if os.path.isdir(basepath):
-                for root, dirs, names in os.walk(basepath):  # show names also in subfolders
+                for root, dirs, names in os.walk(basepath):
                     for name in names:
                         if name.endswith('.isoslant'):
                             filepath = basepath + '/' + name
-                            # amplitude = config_tools.read_value(filepath, ['amplitude'], sep='=')
-                            # phase = config_tools.read_value(filepath, ['phase'], sep='=')
+                            iso_dl = config_tools.read_value(filepath, ['dl'], sep=':')
+                            iso_phi = config_tools.read_value(filepath, ['phi'], sep=':')
 
-                            amplitude = config_tools.read_value(filepath, ['dl'], sep=':')  # for iris-isoslant data
-                            phase = config_tools.read_value(filepath, ['phi'], sep=':')
+                            # sub_dlum += iso_dl * np.sin(theta + iso_phi)  # this is incorrect!
 
-                            # offset = ParReader(name).find_param(lines, 'offset', '=')
-                            # offset = filetools.findparam(lines, 'offset')
-
-                            # sub_dlum = dlum + amplitude * np.sin(theta + phase) + offset
-                            sub_dlum = dlum + amplitude * np.sin(theta + phase)
+                            # correct the calculation as it in iris-tool:
+                            sub_dlum += iso_dl * (np.cos(theta) * np.cos(iso_phi) +
+                                                  np.sin(theta) * np.sin(iso_phi))
+                            # print(sub_dlum)
             else:
-                sub_dlum = 0
                 warnings.warn("No isoslant file is found for this subject! "
                               "Results without subjective adjustment will be given.")
         else:
-            sub_dlum = 0
             warnings.warn("No subjective adjustment is requested. "
                           "Results without subjective adjustment will be given.")
 
-        tempgray = self.gengray(gray, sub_dlum)  # first move along luminance axis to the temporal gray and then find the desired color
+        # first move along luminance axis to the temporal gray and then find the desired color
+        tempgray = self.gengray(gray, sub_dlum)
         
         sml = self.gensml(theta, gray=tempgray)
         rgb = self.genrgb(theta, gray=tempgray)
         return sml, rgb
 
-    def gentheta(self, rgb, gray=None):  
+    def gentheta(self, sml=None, rgb=None, gray=None):
         """
-        Calculate hue angle given RGB values
+        Calculate hue angle given RGB or sml values
         :param rgb: RGB values
         :param gray: alternative gray RGB values if not None
         :return: theta (in radian or degree, depending on the class init)
         """
         c = self.c
-        sscale = self.c
+        sscale = self.sscale
         if gray is None:
             gray = self.Csml
-        sml = self.transf.rgb2sml(rgb)
+        if sml is None and rgb is not None:
+            sml = self.transf.rgb2sml(rgb)
+        if sml is None and rgb is None:
+            raise ValueError("No sml or rgb value input!")
+            exit(1)
+
         lmratio = 1 * gray[2] / gray[1]  # this ratio can be adjusted
 
-        y = (sml[0] / gray[0] - 1.0) / (sscale * c)  # sin value
-        x = (sml[2] / gray[2] - 1.0) * (1.0 + lmratio) / c  # cos value
-        x = (sml[1] / gray[1] - 1.0) * (1.0 + lmratio) / (- c * lmratio)
+        y = (sml[0] / gray[0] - 1.0) / (sscale * c)
+
+        # the transformation used in iris-tool dkl::iso_lum
+        # x = (sml[1] / gray[1] - 1.0) * (1.0 + lmratio) / (- c * lmratio)
+        # or:
+        # x = (sml[2] / gray[2] - 1.0) * (1.0 + lmratio) / c
+
+        x = (sml[1]/gray[1] - 1.0) / self.c / (1 - lmratio)
+        # or:
+        # x = (sml[2]/gray[2] - 1.0) / self.c / (1 - 1/lmratio)
         theta = np.arctan2(y, x)
 
         if self.unit != 'rad':
@@ -165,9 +188,6 @@ class ColorPicker:
                 theta = 360 + theta
 
         return theta
-        # sml = [gray[0] * (1.0 + sscale * c * np.sin(theta)),
-        #        gray[1] * (1.0 - c * np.cos(theta) * lmratio / (1.0 + lmratio)),
-        #        gray[2] * (1.0 + c * np.cos(theta) / (1.0 + lmratio))]
 
     def gencolorlist(self, hue_res):
         """
@@ -220,6 +240,7 @@ class ColorPicker:
     def circolors(self, numStim):
         """
         Generate colors for a color circle
+
         :param numStim: the number of colors in the color circle
         :return: the sml and RGB of all colors in the color circle
         """
@@ -237,6 +258,7 @@ class ColorPicker:
     def showcolorcircle(self, numStim=8):  # show the color circle
         """
         Draw and paint a color circle
+
         :param numStim: the number of colors in the color circle
         """
         _, Mrgb = self.circolors(numStim)
@@ -266,9 +288,12 @@ class ColorPicker:
 
 
 "example: to show color circle"
-# ColorPicker(depthBits=8).showcolorcircle(numStim=8)+
+# ColorPicker(depthBits=8, c=0.2).showcolorcircle(numStim=16)
 
 "example: to generate hue-list and rgb-list"
 # ColorPicker(depthBits=10).gencolorlist(0.2)
 # ColorPicker(depthBits=10).gencolorlist(0.5)
 # ColorPicker(depthBits=10).gencolorlist(1.0)
+
+
+# ColorPicker(depthBits=8, c=0.12, unit='degree', subject='twachtler').newcolor(theta=260)

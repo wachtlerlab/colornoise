@@ -135,7 +135,7 @@ def write_par(file_path, noise, method, seed=42, hue_num=8, min_max=None, start_
         par_dict[stim_num]['nDown'] = up_down[1]
 
         """specify for quest method"""
-        par_dict[stim_num]['startValSd'] = 10
+        par_dict[stim_num]['startValSd'] = 12
         par_dict[stim_num]['pThreshold'] = p_threshold  # typical value is 0.63, which is equivalent to a 1 up 1 down standard staircase
 
     with open(file_path, 'w') as file:

@@ -514,19 +514,19 @@ def run_exp(subject, par_file_path=None, cfg_file_path=None, res_dir=None, prior
 
 # run_exp(subject='psuedo', par_file_path=['config/cn2_LL_correct.yaml'], cfg_file_path='config/expconfig_8bit.yaml')
 
-# """ run experiment in bash """
-# if __name__ == '__main__':
-#     parser = argparse.ArgumentParser()
-#     parser.add_argument('--subject')
-#     parser.add_argument('--par_file', nargs='*')
-#     parser.add_argument('--cfg_file')
-#     parser.add_argument('--results_dir')
-#     parser.add_argument('--priors_file')
-#
-#     args = parser.parse_args()
-#     subject = args.subject
-#     par_file = args.par_file
-#     cfg_file = args.cfg_file
-#     results_dir = args.results_dir
-#     priors_file = args.priors_file
-#     run_exp(subject, par_file, cfg_file, results_dir, priors_file)
+""" run experiment in bash """
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--subject')
+    parser.add_argument('--par_file', nargs='*')
+    parser.add_argument('--cfg_file')
+    parser.add_argument('--results_dir')
+    parser.add_argument('--priors_file')
+
+    args = parser.parse_args()
+    subject = args.subject
+    par_file = args.par_file
+    cfg_file = args.cfg_file
+    results_dir = args.results_dir
+    priors_file = args.priors_file
+    run_exp(subject, par_file, cfg_file, results_dir, priors_file)

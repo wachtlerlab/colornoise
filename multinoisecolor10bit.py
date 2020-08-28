@@ -28,7 +28,7 @@ import time
 from psychopy import visual, data, core, event, monitors, misc
 from psychopy.hardware import keyboard
 import os
-from colorpalette_plus import ColorPicker
+from colorpalette import ColorPicker
 import config_tools
 import sys
 import xlsxwriter
@@ -72,8 +72,8 @@ class Exp:
             self.ColorPicker.gencolorlist(0.2)
         self.hue_list = hue_list_path + '/hue-list-10bit-res0.2-sub-' + self.subject + '.npy'
 
-        self.Csml = self.ColorPicker.Csml
-        self.Crgb = self.ColorPicker.Crgb
+        self.Csml = self.ColorPicker.center()
+        self.Crgb = self.ColorPicker.sml2rgb(self.ColorPicker.center())
         self.mon = monitors.Monitor(name=self.cfg['monitor']['name'],
                                     width=self.cfg['monitor']['width'],
                                     distance=self.cfg['monitor']['distance'])
@@ -94,7 +94,7 @@ class Exp:
                             radius=self.cfg['ref_size'],
                             fillColorSpace=self.ColorSpace,
                             lineColorSpace=self.ColorSpace)
-        ref.fillColor = self.ColorPicker.newcolor(theta, self.param['dlum'])[1]
+        ref.fillColor = self.ColorPicker.newcolor(theta=theta)[1]
         ref.lineColor = ref.fillColor
         return ref
 
@@ -120,7 +120,7 @@ class Exp:
 
     def rand_color(self, theta, sigma, npatch):  # generate color noise
         noise = np.random.normal(theta, sigma, npatch)
-        color = [ColorPicker.newcolor(theta, self.param['dlum']) for n in noise]
+        color = [ColorPicker.newcolor(theta=n) for n in noise]
         sml, rgb = zip(*color)
         return sml, rgb
 
@@ -128,11 +128,11 @@ class Exp:
         sColor = None
         tColor = None
         if self.param['noise_condition'] == 'L-L':  # low - low noise
-            sColor = self.ColorPicker.newcolor(standard, self.param['dlum'])[1]
-            tColor = self.ColorPicker.newcolor(test, self.param['dlum'])[1]
+            sColor = self.ColorPicker.newcolor(theta=standard)[1]
+            tColor = self.ColorPicker.newcolor(theta=test)[1]
 
         elif self.param['noise_condition'] == 'L-H':  # low - high noise: only test stimulus has high noise
-            sColor = self.ColorPicker.newcolor(standard, self.param['dlum'])[1]
+            sColor = self.ColorPicker.newcolor(theta=standard)[1]
 
             tColor = self.rand_color(test, self.param['sigma'], self.patch_nmb)[1]
 
@@ -232,7 +232,7 @@ class Exp:
         rect.xys = [(x, y) for x in np.linspace(-1, 1, horiz_n, endpoint=False) + 1 / horiz_n
                     for y in np.linspace(-1, 1, vertic_n, endpoint=False) + 1 / vertic_n]
 
-        rect.colors = [self.ColorPicker.newcolor(x)[1] for x in
+        rect.colors = [self.ColorPicker.newcolor(theta=x)[1] for x in
                        np.random.randint(0, high=360, size=horiz_n * vertic_n)]
         rect.draw()
         self.win.flip()
@@ -383,18 +383,32 @@ class Exp:
                     direction = (-1) ** (
                         cur_handler.extraInfo['label'].endswith('m'))  # direction as -1 if for minus stim
 
-                    if trial_n == np.ceil(self.trial_nmb*0.5) or trial_n == np.ceil(self.trial_nmb*2/3):  # after 1/2 and 2/3 sessions, slightly change the rotation for this trial
-                        rot = (cur_handler._nextIntensity + 1) * direction
-                        # print(cur_handler._nextIntensity * direction)
-                        # print(rot)
-                    else:
-                        rot = cur_handler._nextIntensity * direction  # rotation for this trial
+                    if cur_handler._nextIntensity <= 0.2 or cur_handler._nextIntensity >= 10.0:
+                        sys.exit("Hue difference is out of range! Please enlarge the testing range or take more training!")
+
+                    rot = cur_handler._nextIntensity * direction  # rotation for this trial
+                    if trial_n >= 5:  # avoid repeating an intensity more than 3 times
+                        last_rots = [np.round(r, decimals=1) for r in
+                                     [rot_all_disp[handler_idx][trial_n-1],
+                                      rot_all_disp[handler_idx][trial_n-2],
+                                      rot_all_disp[handler_idx][trial_n-3]]]
+                        last_resp = [judge_all[handler_idx][trial_n-1],
+                                     judge_all[handler_idx][trial_n-2],
+                                     judge_all[handler_idx][trial_n-3]]
+                        if last_rots[0] == last_rots[1] == last_rots[2] \
+                                and last_resp[0] == last_resp[1] == last_resp[2]:
+                            if cur_handler._nextIntensity > 0.5:
+                                rot = (cur_handler._nextIntensity - 0.5) * direction
+                                print('Intensity decreases by 0.5!')
+                            if cur_handler._nextIntensity <= 0.5:
+                                rot = (cur_handler._nextIntensity + 0.5) * direction
+                                print('Intensity increases by 0.5!')
+                    cond = cur_handler.extraInfo
+                    judge, react_time, trial_time_start = self.run_trial(rot, cond, count)
 
                     if len(rot_all) <= handler_idx:
                         rot_all.append([])
                     rot_all[handler_idx].append(rot)
-                    cond = cur_handler.extraInfo
-                    judge, react_time, trial_time_start = self.run_trial(rot, cond, count)
 
                     if len(judge_all) <= handler_idx:
                         judge_all.append([])
@@ -402,7 +416,7 @@ class Exp:
 
                     valid_theta = np.round(np.load(self.hue_list), decimals=1)
                     disp_standard = self.take_closest(valid_theta, cond['standard'])
-                    stair_test = cond['standard'] + rot  # calculated test hue for this trial - although it is called nextIntensity
+                    stair_test = cond['standard'] + rot  # calculated test hue for this trial
                     if stair_test < 0:
                         stair_test += 360
                     disp_test = self.take_closest(valid_theta, stair_test)  # actual displayed test hue for this trial
@@ -410,6 +424,7 @@ class Exp:
                     disp_intensity = disp_test - disp_standard  # actual displayed hue difference
                     if disp_intensity > 300:
                         disp_intensity = (disp_test + disp_standard) - 360
+
                     cur_handler.addResponse(judge,
                                             abs(disp_intensity))  # only positive number is accepted by addResponse
 
@@ -499,19 +514,19 @@ def run_exp(subject, par_file_path=None, cfg_file_path=None, res_dir=None, prior
 
 # run_exp(subject='psuedo', par_file_path=['config/cn2_LL_correct.yaml'], cfg_file_path='config/expconfig_8bit.yaml')
 
-""" run experiment in bash """
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--subject')
-    parser.add_argument('--par_file', nargs='*')
-    parser.add_argument('--cfg_file')
-    parser.add_argument('--results_dir')
-    parser.add_argument('--priors_file')
-
-    args = parser.parse_args()
-    subject = args.subject
-    par_file = args.par_file
-    cfg_file = args.cfg_file
-    results_dir = args.results_dir
-    priors_file = args.priors_file
-    run_exp(subject, par_file, cfg_file, results_dir, priors_file)
+# """ run experiment in bash """
+# if __name__ == '__main__':
+#     parser = argparse.ArgumentParser()
+#     parser.add_argument('--subject')
+#     parser.add_argument('--par_file', nargs='*')
+#     parser.add_argument('--cfg_file')
+#     parser.add_argument('--results_dir')
+#     parser.add_argument('--priors_file')
+#
+#     args = parser.parse_args()
+#     subject = args.subject
+#     par_file = args.par_file
+#     cfg_file = args.cfg_file
+#     results_dir = args.results_dir
+#     priors_file = args.priors_file
+#     run_exp(subject, par_file, cfg_file, results_dir, priors_file)

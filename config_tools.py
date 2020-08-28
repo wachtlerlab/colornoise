@@ -68,7 +68,7 @@ def write_cfg(file_path):
         yaml.dump(cfg_dict, file, default_flow_style=False, sort_keys=False)
 
 
-def write_par(file_path, noise, method, seed=42, hue_num=8, min_max=None, start_val=3.0, step_type=None,
+def write_par(file_path, noise, method, seed=42, hue_num=8, min_max=None, start_val=5.0, step_type=None,
               up_down=None, p_threshold=0.63):
     """
     Write parameters to a YAML file.
@@ -101,9 +101,8 @@ def write_par(file_path, noise, method, seed=42, hue_num=8, min_max=None, start_
             stimulus[idx - 1]['label'] = 'hue_' + str(int(idx / 2)) + 'm'
 
     """basic config"""
-    par_dict = {'c': 0.12,
+    par_dict = {'c': 0.16,
                 'sscale': 2.6,
-                'dlum': 0,
                 'noise_condition': noise,
                 'sigma': 2}
 
@@ -135,7 +134,7 @@ def write_par(file_path, noise, method, seed=42, hue_num=8, min_max=None, start_
         par_dict[stim_num]['nDown'] = up_down[1]
 
         """specify for quest method"""
-        par_dict[stim_num]['startValSd'] = 12
+        par_dict[stim_num]['startValSd'] = 10
         par_dict[stim_num]['pThreshold'] = p_threshold  # typical value is 0.63, which is equivalent to a 1 up 1 down standard staircase
 
     with open(file_path, 'w') as file:

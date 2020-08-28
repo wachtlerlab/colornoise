@@ -127,7 +127,7 @@ class transformation():
         else:
             raise ValueError
         vertex8 = vertex2 + vertex3 + vertex4
-        c = (vertex8 + vertex1) / 2
+        c = (vertex8 + vertex1) * 0.6 # / 2
         return np.array(c)
 
     def isindomain(self, sml):  # it checks if the transformation can work

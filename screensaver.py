@@ -14,7 +14,7 @@ import time
 from psychopy import visual, core, monitors
 from psychopy.hardware import keyboard
 import sys
-from colorpalette_plus import ColorPicker
+from colorpalette import ColorPicker
 
 
 def run_scrsaver(depthBits):
@@ -40,7 +40,7 @@ def run_scrsaver(depthBits):
         rect.xys = [(x, y) for x in np.linspace(-1, 1, num, endpoint=False) + 1 / num for y in
                     np.linspace(-1, 1, num, endpoint=False) + 1 / num]
 
-        rect.colors = [ColorPicker(depthBits=depthBits, unit='deg').newcolor(x)[1] for x in
+        rect.colors = [ColorPicker(depthBits=depthBits, unit='deg').newcolor(theta=x)[1] for x in
                        np.random.randint(0, high=360, size=num ** 2)]
         rect.draw()
         win.mouseVisible = False
@@ -57,4 +57,4 @@ if __name__ == '__main__':
     run_scrsaver(int(sys.argv[1]))
 
 """example: execute the program with command"""
-# python3.7 screensaver 8
+# python3.7 screensaver.py 8

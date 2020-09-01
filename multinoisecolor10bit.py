@@ -88,9 +88,10 @@ class Exp:
 
     """stimulus features"""
 
-    def patch_ref(self, theta):  # reference patches
+    def patch_ref(self, theta, pos):  # reference patches
         ref = visual.Circle(win=self.win,
                             units='deg',
+                            pos=pos,
                             radius=self.cfg['ref_size'],
                             fillColorSpace=self.ColorSpace,
                             lineColorSpace=self.ColorSpace)
@@ -98,10 +99,15 @@ class Exp:
         ref.lineColor = ref.fillColor
         return ref
 
-    def patch_stim(self):  # standard and test stimuli
+    def patch_stim(self, xlim, ylim):  # standard and test stimuli
+        n = int(np.sqrt(self.patch_nmb))
+        pos = [[x, y]
+               for x in np.linspace(xlim[0], xlim[1], n)
+               for y in np.linspace(ylim[0], ylim[1], n)]
         patch = visual.ElementArrayStim(win=self.win,
                                         units='deg',
                                         fieldSize=self.cfg['field_size'],
+                                        xys=pos,
                                         nElements=self.patch_nmb,
                                         elementMask='circle',
                                         elementTex=None,
@@ -109,18 +115,12 @@ class Exp:
                                         colorSpace=self.ColorSpace)
         return patch
 
-    def patch_pos(self, xlim, ylim):  # position of standard and test stimuli
-        n = int(np.sqrt(self.patch_nmb))
-        pos = [[x, y]
-               for x in np.linspace(xlim[0], xlim[1], n)
-               for y in np.linspace(ylim[0], ylim[1], n)]
-        return pos
 
     """color noise & noise conditions"""
 
     def rand_color(self, theta, sigma, npatch):  # generate color noise
         noise = np.random.normal(theta, sigma, npatch)
-        color = [ColorPicker.newcolor(theta=n) for n in noise]
+        color = [self.ColorPicker.newcolor(theta=n) for n in noise]
         sml, rgb = zip(*color)
         return sml, rgb
 
@@ -168,29 +168,24 @@ class Exp:
 
     def run_trial(self, rot, cond, count):
         # set two reference
-        left = cond['leftRef']
-        right = cond['rightRef']
+        leftRef = self.patch_ref(theta=cond['leftRef'],
+                                 pos=self.cfg['leftRef.pos'])
+        rightRef = self.patch_ref(theta=cond['rightRef'],
+                                  pos=self.cfg['rightRef.pos'])
 
-        leftRef = self.patch_ref(left)
-        leftRef.pos = self.cfg['leftRef.pos']
-        rightRef = self.patch_ref(right)
-        rightRef.pos = self.cfg['rightRef.pos']
+        # randomly assign patch positions: upper (+) or lower (-)
+        patchpos = [self.cfg['standard.ylim'],
+                    self.cfg['test.ylim']]
+        rndpos = patchpos.copy()
+        np.random.shuffle(rndpos)
+
+        sPatch = self.patch_stim(self.cfg['standard.xlim'], rndpos[0])
+        tPatch = self.patch_stim(self.cfg['test.xlim'], rndpos[1])
 
         # set colors of two stimuli
         standard = cond['standard']  # standard should be fixed
         test = standard + rot
-
-        sPatch = self.patch_stim()
-        tPatch = self.patch_stim()
         sPatch.colors, tPatch.colors = self.choose_con(standard, test)
-
-        # randomly assign patch positions: upper (+) or lower (-)
-        patchpos = [self.cfg['standard.ylim'], self.cfg['test.ylim']]
-        rndpos = patchpos.copy()
-        np.random.shuffle(rndpos)
-
-        sPatch.xys = self.patch_pos(self.cfg['standard.xlim'], rndpos[0])
-        tPatch.xys = self.patch_pos(self.cfg['test.xlim'], rndpos[1])
 
         # fixation cross
         fix = visual.TextStim(self.win, text="+", units='deg', pos=[0, 0], height=0.5, color='black',

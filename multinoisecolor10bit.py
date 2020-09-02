@@ -378,7 +378,7 @@ class Exp:
                     direction = (-1) ** (
                         cur_handler.extraInfo['label'].endswith('m'))  # direction as -1 if for minus stim
 
-                    if cur_handler._nextIntensity <= 0.2 or cur_handler._nextIntensity >= 10.0:
+                    if cur_handler._nextIntensity >= 10.0:
                         sys.exit("Hue difference is out of range! Please enlarge the testing range or take more training!")
 
                     rot = cur_handler._nextIntensity * direction  # rotation for this trial

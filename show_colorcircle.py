@@ -18,7 +18,7 @@ import argparse
 
 def show_colorcircle(subject, contrast, depthBits, numStim):
     if contrast is None:
-        contrast = 0.16
+        contrast = 0.15
     if depthBits is None:
         depthBits = 10
     if numStim is None:

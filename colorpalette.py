@@ -10,7 +10,6 @@ Main module: ColorPicker
 import os
 import numpy as np
 from psychopy import visual, misc, event
-import rgb2sml_plus
 import config_tools
 import warnings
 import sys
@@ -61,7 +60,7 @@ def read_calib():
 
 
 class ColorPicker:
-    def __init__(self, c=0.16, sscale=2.6, unit='rad', depthBits=8, subject=None):
+    def __init__(self, c=0.15, sscale=2.6, unit='rad', depthBits=8, subject=None):
         """
         Color Picker for generating sml and RGB values with hue angles on an iso-luminance plane.
 
@@ -71,7 +70,7 @@ class ColorPicker:
             - generate display-realizable hue lists
             - display a color circle
 
-        :param c:          contrast (i.e. chromaticity since we use iso-luminance), less than 0.17; default is 0.16
+        :param c:          contrast (i.e. chromaticity since we use iso-luminance), less than 0.16 (tested on VPixx); default is 0.15
         :param sscale:     chromatic scaling along S-axis relative to L-M axis to make all stimuli look more salient; default is 2.6
         :param unit:       hue angle unit: radian[default] or degree
         :param depthBits:  color depth: 8[default] or 10
@@ -156,6 +155,7 @@ class ColorPicker:
         """
 
         sub_dlum = 0
+        isoslant_file = 0
 
         if self.subject is not None:
             basepath = 'isolum/' + self.subject
@@ -164,6 +164,7 @@ class ColorPicker:
                 for root, dirs, names in os.walk(basepath):
                     for name in names:
                         if name.endswith('.isoslant'):
+                            isoslant_file += 1
                             filepath = basepath + '/' + name
                             iso_dl = config_tools.read_value(filepath, ['dl'], sep=':')
                             iso_phi = config_tools.read_value(filepath, ['phi'], sep=':')
@@ -173,9 +174,11 @@ class ColorPicker:
                             # correct the calculation as it in iris-tool:
                             sub_dlum += iso_dl * (np.cos(theta) * np.cos(iso_phi) +
                                                   np.sin(theta) * np.sin(iso_phi))
-                            print(str(theta) + ': ' + str(sub_dlum))
-                        else:
-                            warnings.warn("No isoslant file is found for this subject.")
+                            # print(str(theta) + ': ' + str(sub_dlum))
+            if isoslant_file < 1:
+                warnings.warn("No isoslant file is found for this subject.")
+            if isoslant_file > 1:
+                sys.exit('Multiple isoslant files are found. Please specify one!')
         else:
             warnings.warn("No subjective adjustment is requested.")
 

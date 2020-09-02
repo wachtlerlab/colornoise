@@ -101,7 +101,7 @@ def write_par(file_path, noise, method, seed=42, hue_num=8, min_max=None, start_
             stimulus[idx - 1]['label'] = 'hue_' + str(int(idx / 2)) + 'm'
 
     """basic config"""
-    par_dict = {'c': 0.16,
+    par_dict = {'c': 0.15,
                 'sscale': 2.6,
                 'noise_condition': noise,
                 'sigma': 2}

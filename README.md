@@ -1,4 +1,3 @@
-
 ## Project Overview
 This project aims to recover the prior distribution in hue perception. 
 
@@ -56,7 +55,7 @@ gantt
   
 
   section Data collection
-  Data collection 1        :exp1, after extra, 30d
+  Data collection 1        :exp1, after extra, 50d
   Data collection 2,3      :exp2, after exp1, 30d
   
 

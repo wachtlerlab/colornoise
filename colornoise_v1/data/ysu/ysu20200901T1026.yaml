@@ -1,0 +1,1390 @@
+time: 20200901T1026
+cfg_file: config/expconfig.yaml
+par_file: config/cn2x8_LL_c.yaml
+monitor:
+  name: VIEWPixx_2000A
+  size:
+  - 1920
+  - 1200
+  width: 48.4
+  distance: 57
+depthBits: 10
+patch_nmb: 16
+patch_size: 0.75
+ref_size: 0.8
+field_size:
+- 0.4
+- 0.4
+leftRef.pos:
+- -5
+- 2.5
+rightRef.pos:
+- 5
+- 2.5
+standard.xlim:
+- -1.5
+- 1.5
+standard.ylim:
+- 1
+- 4
+test.xlim:
+- -1.5
+- 1.5
+test.ylim:
+- -4
+- -1
+trial_nmb: 20
+trial_dur: 1
+c: 0.145
+sscale: 2.6
+dlum: 0
+noise_condition: L-L
+sigma: 2
+stimulus_0:
+  label: hue_1m
+  standard: 0.0
+  leftRef: 10.0
+  rightRef: -10.0
+  stairType: quest
+  startVal: 5.0
+  min_val: 0.2
+  max_val: 10.0
+  stepType: null
+  nReversals: 2
+  stepSizes:
+  - 2
+  - 1
+  nUp: null
+  nDown: null
+  startValSd: 10
+  pThreshold: 0.63
+stimulus_1:
+  label: hue_7m
+  standard: 270.0
+  leftRef: 280.0
+  rightRef: 260.0
+  stairType: quest
+  startVal: 5.0
+  min_val: 0.2
+  max_val: 10.0
+  stepType: null
+  nReversals: 2
+  stepSizes:
+  - 2
+  - 1
+  nUp: null
+  nDown: null
+  startValSd: 10
+  pThreshold: 0.63
+stimulus_2:
+  label: hue_1p
+  standard: 0.0
+  leftRef: 10.0
+  rightRef: -10.0
+  stairType: quest
+  startVal: 5.0
+  min_val: 0.2
+  max_val: 10.0
+  stepType: null
+  nReversals: 2
+  stepSizes:
+  - 2
+  - 1
+  nUp: null
+  nDown: null
+  startValSd: 10
+  pThreshold: 0.63
+stimulus_3:
+  label: hue_8p
+  standard: 315.0
+  leftRef: 325.0
+  rightRef: 305.0
+  stairType: quest
+  startVal: 5.0
+  min_val: 0.2
+  max_val: 10.0
+  stepType: null
+  nReversals: 2
+  stepSizes:
+  - 2
+  - 1
+  nUp: null
+  nDown: null
+  startValSd: 10
+  pThreshold: 0.63
+stimulus_4:
+  label: hue_6p
+  standard: 225.0
+  leftRef: 235.0
+  rightRef: 215.0
+  stairType: quest
+  startVal: 5.0
+  min_val: 0.2
+  max_val: 10.0
+  stepType: null
+  nReversals: 2
+  stepSizes:
+  - 2
+  - 1
+  nUp: null
+  nDown: null
+  startValSd: 10
+  pThreshold: 0.63
+stimulus_5:
+  label: hue_2p
+  standard: 45.0
+  leftRef: 55.0
+  rightRef: 35.0
+  stairType: quest
+  startVal: 5.0
+  min_val: 0.2
+  max_val: 10.0
+  stepType: null
+  nReversals: 2
+  stepSizes:
+  - 2
+  - 1
+  nUp: null
+  nDown: null
+  startValSd: 10
+  pThreshold: 0.63
+stimulus_6:
+  label: hue_4p
+  standard: 135.0
+  leftRef: 145.0
+  rightRef: 125.0
+  stairType: quest
+  startVal: 5.0
+  min_val: 0.2
+  max_val: 10.0
+  stepType: null
+  nReversals: 2
+  stepSizes:
+  - 2
+  - 1
+  nUp: null
+  nDown: null
+  startValSd: 10
+  pThreshold: 0.63
+stimulus_7:
+  label: hue_6m
+  standard: 225.0
+  leftRef: 235.0
+  rightRef: 215.0
+  stairType: quest
+  startVal: 5.0
+  min_val: 0.2
+  max_val: 10.0
+  stepType: null
+  nReversals: 2
+  stepSizes:
+  - 2
+  - 1
+  nUp: null
+  nDown: null
+  startValSd: 10
+  pThreshold: 0.63
+stimulus_8:
+  label: hue_8m
+  standard: 315.0
+  leftRef: 325.0
+  rightRef: 305.0
+  stairType: quest
+  startVal: 5.0
+  min_val: 0.2
+  max_val: 10.0
+  stepType: null
+  nReversals: 2
+  stepSizes:
+  - 2
+  - 1
+  nUp: null
+  nDown: null
+  startValSd: 10
+  pThreshold: 0.63
+stimulus_9:
+  label: hue_2m
+  standard: 45.0
+  leftRef: 55.0
+  rightRef: 35.0
+  stairType: quest
+  startVal: 5.0
+  min_val: 0.2
+  max_val: 10.0
+  stepType: null
+  nReversals: 2
+  stepSizes:
+  - 2
+  - 1
+  nUp: null
+  nDown: null
+  startValSd: 10
+  pThreshold: 0.63
+stimulus_10:
+  label: hue_3m
+  standard: 90.0
+  leftRef: 100.0
+  rightRef: 80.0
+  stairType: quest
+  startVal: 5.0
+  min_val: 0.2
+  max_val: 10.0
+  stepType: null
+  nReversals: 2
+  stepSizes:
+  - 2
+  - 1
+  nUp: null
+  nDown: null
+  startValSd: 10
+  pThreshold: 0.63
+stimulus_11:
+  label: hue_5m
+  standard: 180.0
+  leftRef: 190.0
+  rightRef: 170.0
+  stairType: quest
+  startVal: 5.0
+  min_val: 0.2
+  max_val: 10.0
+  stepType: null
+  nReversals: 2
+  stepSizes:
+  - 2
+  - 1
+  nUp: null
+  nDown: null
+  startValSd: 10
+  pThreshold: 0.63
+stimulus_12:
+  label: hue_7p
+  standard: 270.0
+  leftRef: 280.0
+  rightRef: 260.0
+  stairType: quest
+  startVal: 5.0
+  min_val: 0.2
+  max_val: 10.0
+  stepType: null
+  nReversals: 2
+  stepSizes:
+  - 2
+  - 1
+  nUp: null
+  nDown: null
+  startValSd: 10
+  pThreshold: 0.63
+stimulus_13:
+  label: hue_3p
+  standard: 90.0
+  leftRef: 100.0
+  rightRef: 80.0
+  stairType: quest
+  startVal: 5.0
+  min_val: 0.2
+  max_val: 10.0
+  stepType: null
+  nReversals: 2
+  stepSizes:
+  - 2
+  - 1
+  nUp: null
+  nDown: null
+  startValSd: 10
+  pThreshold: 0.63
+stimulus_14:
+  label: hue_5p
+  standard: 180.0
+  leftRef: 190.0
+  rightRef: 170.0
+  stairType: quest
+  startVal: 5.0
+  min_val: 0.2
+  max_val: 10.0
+  stepType: null
+  nReversals: 2
+  stepSizes:
+  - 2
+  - 1
+  nUp: null
+  nDown: null
+  startValSd: 10
+  pThreshold: 0.63
+stimulus_15:
+  label: hue_4m
+  standard: 135.0
+  leftRef: 145.0
+  rightRef: 125.0
+  stairType: quest
+  startVal: 5.0
+  min_val: 0.2
+  max_val: 10.0
+  stepType: null
+  nReversals: 2
+  stepSizes:
+  - 2
+  - 1
+  nUp: null
+  nDown: null
+  startValSd: 10
+  pThreshold: 0.63
+trial_1:
+  count: 1
+  stimulus: stimulus_0
+  standard_stim: 0.0
+  test_stim: -5.0
+  calculated_intensity: -5.0
+  actual_intensity: -5.0
+  judge: 1
+  react_time: 0.7731583118438721
+  trial_time_stamp: 1598948774.3881514
+trial_2:
+  count: 2
+  stimulus: stimulus_1
+  standard_stim: 270.0
+  test_stim: 265.0
+  calculated_intensity: -5.0
+  actual_intensity: -5.0
+  judge: 1
+  react_time: 0.7802219390869141
+  trial_time_stamp: 1598948777.696505
+trial_3:
+  count: 3
+  stimulus: stimulus_2
+  standard_stim: 0.0
+  test_stim: 5.0
+  calculated_intensity: 5.0
+  actual_intensity: 5.0
+  judge: 1
+  react_time: 0.773123025894165
+  trial_time_stamp: 1598948781.0729103
+trial_4:
+  count: 4
+  stimulus: stimulus_3
+  standard_stim: 315.0
+  test_stim: 320.0
+  calculated_intensity: 5.0
+  actual_intensity: 5.0
+  judge: 1
+  react_time: 0.7804806232452393
+  trial_time_stamp: 1598948784.2729986
+trial_5:
+  count: 5
+  stimulus: stimulus_4
+  standard_stim: 225.0
+  test_stim: 230.0
+  calculated_intensity: 5.0
+  actual_intensity: 5.0
+  judge: 1
+  react_time: 0.7763118743896484
+  trial_time_stamp: 1598948787.7211208
+trial_6:
+  count: 6
+  stimulus: stimulus_5
+  standard_stim: 45.0
+  test_stim: 50.0
+  calculated_intensity: 5.0
+  actual_intensity: 5.0
+  judge: 1
+  react_time: 0.7823877334594727
+  trial_time_stamp: 1598948791.1212676
+trial_7:
+  count: 7
+  stimulus: stimulus_6
+  standard_stim: 135.0
+  test_stim: 140.0
+  calculated_intensity: 5.0
+  actual_intensity: 5.0
+  judge: 1
+  react_time: 0.7754323482513428
+  trial_time_stamp: 1598948794.2495675
+trial_8:
+  count: 8
+  stimulus: stimulus_7
+  standard_stim: 225.0
+  test_stim: 220.0
+  calculated_intensity: -5.0
+  actual_intensity: -5.0
+  judge: 1
+  react_time: 0.7809138298034668
+  trial_time_stamp: 1598948797.3052487
+trial_9:
+  count: 9
+  stimulus: stimulus_8
+  standard_stim: 315.0
+  test_stim: 310.0
+  calculated_intensity: -5.0
+  actual_intensity: -5.0
+  judge: 1
+  react_time: 0.773876428604126
+  trial_time_stamp: 1598948800.5151591
+trial_10:
+  count: 10
+  stimulus: stimulus_9
+  standard_stim: 45.0
+  test_stim: 40.0
+  calculated_intensity: -5.0
+  actual_intensity: -5.0
+  judge: 1
+  react_time: 0.7735106945037842
+  trial_time_stamp: 1598948803.6414702
+trial_11:
+  count: 11
+  stimulus: stimulus_10
+  standard_stim: 90.0
+  test_stim: 85.0
+  calculated_intensity: -5.0
+  actual_intensity: -5.0
+  judge: 1
+  react_time: 0.7830216884613037
+  trial_time_stamp: 1598948806.7451656
+trial_12:
+  count: 12
+  stimulus: stimulus_11
+  standard_stim: 180.0
+  test_stim: 175.0
+  calculated_intensity: -5.0
+  actual_intensity: -5.0
+  judge: 1
+  react_time: 0.7817442417144775
+  trial_time_stamp: 1598948810.0820785
+trial_13:
+  count: 13
+  stimulus: stimulus_12
+  standard_stim: 270.0
+  test_stim: 275.0
+  calculated_intensity: 5.0
+  actual_intensity: 5.0
+  judge: 1
+  react_time: 0.7759392261505127
+  trial_time_stamp: 1598948813.1777966
+trial_14:
+  count: 14
+  stimulus: stimulus_13
+  standard_stim: 90.0
+  test_stim: 95.0
+  calculated_intensity: 5.0
+  actual_intensity: 5.0
+  judge: 1
+  react_time: 0.775972843170166
+  trial_time_stamp: 1598948816.410009
+trial_15:
+  count: 15
+  stimulus: stimulus_14
+  standard_stim: 180.0
+  test_stim: 185.0
+  calculated_intensity: 5.0
+  actual_intensity: 5.0
+  judge: 1
+  react_time: 0.7762143611907959
+  trial_time_stamp: 1598948819.5382328
+trial_16:
+  count: 16
+  stimulus: stimulus_15
+  standard_stim: 135.0
+  test_stim: 130.0
+  calculated_intensity: -5.0
+  actual_intensity: -5.0
+  judge: 1
+  react_time: 0.7812469005584717
+  trial_time_stamp: 1598948822.9466226
+trial_17:
+  count: 17
+  stimulus: stimulus_0
+  standard_stim: 0.0
+  test_stim: -4.420056525959915
+  calculated_intensity: -4.420056525959915
+  actual_intensity: -4.4
+  judge: 1
+  react_time: 0.7777671813964844
+  trial_time_stamp: 1598948826.1056185
+trial_18:
+  count: 18
+  stimulus: stimulus_1
+  standard_stim: 270.0
+  test_stim: 265.5799434740401
+  calculated_intensity: -4.420056525959915
+  actual_intensity: -4.4
+  judge: 1
+  react_time: 0.7843854427337646
+  trial_time_stamp: 1598948829.162198
+trial_19:
+  count: 19
+  stimulus: stimulus_2
+  standard_stim: 0.0
+  test_stim: 4.420056525959915
+  calculated_intensity: 4.420056525959915
+  actual_intensity: 4.4
+  judge: 0
+  react_time: 0.7744507789611816
+  trial_time_stamp: 1598948832.698146
+trial_20:
+  count: 20
+  stimulus: stimulus_3
+  standard_stim: 315.0
+  test_stim: 319.4200565259599
+  calculated_intensity: 4.420056525959915
+  actual_intensity: 4.4
+  judge: 1
+  react_time: 0.7803325653076172
+  trial_time_stamp: 1598948836.0583475
+trial_21:
+  count: 21
+  stimulus: stimulus_4
+  standard_stim: 225.0
+  test_stim: 229.42005652595992
+  calculated_intensity: 4.420056525959915
+  actual_intensity: 4.4
+  judge: 1
+  react_time: 0.7830104827880859
+  trial_time_stamp: 1598948839.2424357
+trial_22:
+  count: 22
+  stimulus: stimulus_5
+  standard_stim: 45.0
+  test_stim: 49.420056525959914
+  calculated_intensity: 4.420056525959915
+  actual_intensity: 4.4
+  judge: 1
+  react_time: 0.7749760150909424
+  trial_time_stamp: 1598948842.3064144
+trial_23:
+  count: 23
+  stimulus: stimulus_6
+  standard_stim: 135.0
+  test_stim: 139.42005652595992
+  calculated_intensity: 4.420056525959915
+  actual_intensity: 4.4
+  judge: 1
+  react_time: 0.7790992259979248
+  trial_time_stamp: 1598948845.5143538
+trial_24:
+  count: 24
+  stimulus: stimulus_7
+  standard_stim: 225.0
+  test_stim: 220.57994347404008
+  calculated_intensity: -4.420056525959915
+  actual_intensity: -4.4
+  judge: 0
+  react_time: 0.9270534515380859
+  trial_time_stamp: 1598948849.2669592
+trial_25:
+  count: 25
+  stimulus: stimulus_8
+  standard_stim: 315.0
+  test_stim: 310.5799434740401
+  calculated_intensity: -4.420056525959915
+  actual_intensity: -4.4
+  judge: 1
+  react_time: 0.7744324207305908
+  trial_time_stamp: 1598948853.4755714
+trial_26:
+  count: 26
+  stimulus: stimulus_9
+  standard_stim: 45.0
+  test_stim: 40.579943474040086
+  calculated_intensity: -4.420056525959915
+  actual_intensity: -4.4
+  judge: 1
+  react_time: 0.77703857421875
+  trial_time_stamp: 1598948856.5868404
+trial_27:
+  count: 27
+  stimulus: stimulus_10
+  standard_stim: 90.0
+  test_stim: 85.57994347404008
+  calculated_intensity: -4.420056525959915
+  actual_intensity: -4.4
+  judge: 1
+  react_time: 0.7759137153625488
+  trial_time_stamp: 1598948859.794961
+trial_28:
+  count: 28
+  stimulus: stimulus_11
+  standard_stim: 180.0
+  test_stim: 175.57994347404008
+  calculated_intensity: -4.420056525959915
+  actual_intensity: -4.4
+  judge: 0
+  react_time: 0.7724640369415283
+  trial_time_stamp: 1598948862.9226987
+trial_29:
+  count: 29
+  stimulus: stimulus_12
+  standard_stim: 270.0
+  test_stim: 274.4200565259599
+  calculated_intensity: 4.420056525959915
+  actual_intensity: 4.4
+  judge: 1
+  react_time: 0.7769894599914551
+  trial_time_stamp: 1598948866.3467867
+trial_30:
+  count: 30
+  stimulus: stimulus_13
+  standard_stim: 90.0
+  test_stim: 94.42005652595992
+  calculated_intensity: 4.420056525959915
+  actual_intensity: 4.4
+  judge: 1
+  react_time: 0.7751107215881348
+  trial_time_stamp: 1598948869.538801
+trial_31:
+  count: 31
+  stimulus: stimulus_14
+  standard_stim: 180.0
+  test_stim: 184.42005652595992
+  calculated_intensity: 4.420056525959915
+  actual_intensity: 4.4
+  judge: 1
+  react_time: 0.7788662910461426
+  trial_time_stamp: 1598948872.602938
+trial_32:
+  count: 32
+  stimulus: stimulus_15
+  standard_stim: 135.0
+  test_stim: 130.57994347404008
+  calculated_intensity: -4.420056525959915
+  actual_intensity: -4.4
+  judge: 1
+  react_time: 0.7774684429168701
+  trial_time_stamp: 1598948876.2507815
+trial_33:
+  count: 33
+  stimulus: stimulus_0
+  standard_stim: 0.0
+  test_stim: -3.518910023222487
+  calculated_intensity: -3.518910023222487
+  actual_intensity: -3.6
+  judge: 1
+  react_time: 0.7728691101074219
+  trial_time_stamp: 1598948879.2829874
+trial_34:
+  count: 34
+  stimulus: stimulus_1
+  standard_stim: 270.0
+  test_stim: 266.4810899767775
+  calculated_intensity: -3.518910023222487
+  actual_intensity: -3.6
+  judge: 1
+  react_time: 1.28810453414917
+  trial_time_stamp: 1598948882.7231789
+trial_35:
+  count: 35
+  stimulus: stimulus_2
+  standard_stim: 0.0
+  test_stim: 7.291258366408389
+  calculated_intensity: 7.291258366408389
+  actual_intensity: 7.2
+  judge: 1
+  react_time: 0.7805299758911133
+  trial_time_stamp: 1598948886.851583
+trial_36:
+  count: 36
+  stimulus: stimulus_3
+  standard_stim: 315.0
+  test_stim: 318.5189100232225
+  calculated_intensity: 3.518910023222487
+  actual_intensity: 3.6
+  judge: 1
+  react_time: 0.7747917175292969
+  trial_time_stamp: 1598948890.0674658
+trial_37:
+  count: 37
+  stimulus: stimulus_4
+  standard_stim: 225.0
+  test_stim: 228.51891002322247
+  calculated_intensity: 3.518910023222487
+  actual_intensity: 3.6
+  judge: 1
+  react_time: 0.7828919887542725
+  trial_time_stamp: 1598948893.4029489
+trial_38:
+  count: 38
+  stimulus: stimulus_5
+  standard_stim: 45.0
+  test_stim: 48.51891002322249
+  calculated_intensity: 3.518910023222487
+  actual_intensity: 3.6
+  judge: 1
+  react_time: 0.7771451473236084
+  trial_time_stamp: 1598948896.4678044
+trial_39:
+  count: 39
+  stimulus: stimulus_6
+  standard_stim: 135.0
+  test_stim: 138.51891002322247
+  calculated_intensity: 3.518910023222487
+  actual_intensity: 3.6
+  judge: 0
+  react_time: 0.7804882526397705
+  trial_time_stamp: 1598948899.6597383
+trial_40:
+  count: 40
+  stimulus: stimulus_7
+  standard_stim: 225.0
+  test_stim: 217.70874163359161
+  calculated_intensity: -7.291258366408389
+  actual_intensity: -7.2
+  judge: 0
+  react_time: 0.7819604873657227
+  trial_time_stamp: 1598948902.8993669
+trial_41:
+  count: 41
+  stimulus: stimulus_8
+  standard_stim: 315.0
+  test_stim: 311.4810899767775
+  calculated_intensity: -3.518910023222487
+  actual_intensity: -3.6
+  judge: 1
+  react_time: 0.7760453224182129
+  trial_time_stamp: 1598948906.0119314
+trial_42:
+  count: 42
+  stimulus: stimulus_9
+  standard_stim: 45.0
+  test_stim: 41.48108997677751
+  calculated_intensity: -3.518910023222487
+  actual_intensity: -3.6
+  judge: 1
+  react_time: 0.7778279781341553
+  trial_time_stamp: 1598948909.3400052
+trial_43:
+  count: 43
+  stimulus: stimulus_10
+  standard_stim: 90.0
+  test_stim: 86.48108997677751
+  calculated_intensity: -3.518910023222487
+  actual_intensity: -3.6
+  judge: 0
+  react_time: 0.7840352058410645
+  trial_time_stamp: 1598948912.4762578
+trial_44:
+  count: 44
+  stimulus: stimulus_11
+  standard_stim: 180.0
+  test_stim: 172.70874163359161
+  calculated_intensity: -7.291258366408389
+  actual_intensity: -7.2
+  judge: 1
+  react_time: 0.7785990238189697
+  trial_time_stamp: 1598948915.7156851
+trial_45:
+  count: 45
+  stimulus: stimulus_12
+  standard_stim: 270.0
+  test_stim: 273.5189100232225
+  calculated_intensity: 3.518910023222487
+  actual_intensity: 3.6
+  judge: 1
+  react_time: 0.777428150177002
+  trial_time_stamp: 1598948919.2759392
+trial_46:
+  count: 46
+  stimulus: stimulus_13
+  standard_stim: 90.0
+  test_stim: 93.51891002322249
+  calculated_intensity: 3.518910023222487
+  actual_intensity: 3.6
+  judge: 1
+  react_time: 0.7828662395477295
+  trial_time_stamp: 1598948922.4677985
+trial_47:
+  count: 47
+  stimulus: stimulus_14
+  standard_stim: 180.0
+  test_stim: 183.51891002322247
+  calculated_intensity: 3.518910023222487
+  actual_intensity: 3.6
+  judge: 1
+  react_time: 0.7775490283966064
+  trial_time_stamp: 1598948925.7800589
+trial_48:
+  count: 48
+  stimulus: stimulus_15
+  standard_stim: 135.0
+  test_stim: 131.48108997677753
+  calculated_intensity: -3.518910023222487
+  actual_intensity: -3.6
+  judge: 1
+  react_time: 0.7719244956970215
+  trial_time_stamp: 1598948929.019839
+trial_49:
+  count: 49
+  stimulus: stimulus_0
+  standard_stim: 0.0
+  test_stim: -2.823871771023657
+  calculated_intensity: -2.823871771023657
+  actual_intensity: -2.8
+  judge: 1
+  react_time: 0.7789316177368164
+  trial_time_stamp: 1598948932.6119769
+trial_50:
+  count: 50
+  stimulus: stimulus_1
+  standard_stim: 270.0
+  test_stim: 267.1761282289763
+  calculated_intensity: -2.823871771023657
+  actual_intensity: -2.8
+  judge: 1
+  react_time: 0.7822506427764893
+  trial_time_stamp: 1598948935.9085069
+trial_51:
+  count: 51
+  stimulus: stimulus_2
+  standard_stim: 0.0
+  test_stim: 6.484334594489914
+  calculated_intensity: 6.484334594489914
+  actual_intensity: 6.4
+  judge: 1
+  react_time: 0.7844851016998291
+  trial_time_stamp: 1598948939.1319537
+trial_52:
+  count: 52
+  stimulus: stimulus_3
+  standard_stim: 315.0
+  test_stim: 317.8238717710237
+  calculated_intensity: 2.823871771023657
+  actual_intensity: 2.8
+  judge: 1
+  react_time: 0.7802321910858154
+  trial_time_stamp: 1598948942.348608
+trial_53:
+  count: 53
+  stimulus: stimulus_4
+  standard_stim: 225.0
+  test_stim: 227.82387177102365
+  calculated_intensity: 2.823871771023657
+  actual_intensity: 2.8
+  judge: 1
+  react_time: 0.7771852016448975
+  trial_time_stamp: 1598948945.5002317
+trial_54:
+  count: 54
+  stimulus: stimulus_5
+  standard_stim: 45.0
+  test_stim: 47.823871771023654
+  calculated_intensity: 2.823871771023657
+  actual_intensity: 2.8
+  judge: 0
+  react_time: 0.7747471332550049
+  trial_time_stamp: 1598948948.5647163
+trial_55:
+  count: 55
+  stimulus: stimulus_6
+  standard_stim: 135.0
+  test_stim: 140.9612313609831
+  calculated_intensity: 5.9612313609831205
+  actual_intensity: 6.0
+  judge: 1
+  react_time: 0.7815930843353271
+  trial_time_stamp: 1598948951.6522343
+trial_56:
+  count: 56
+  stimulus: stimulus_7
+  standard_stim: 225.0
+  test_stim: 216.2361125930394
+  calculated_intensity: -8.763887406960595
+  actual_intensity: -8.8
+  judge: 1
+  react_time: 0.7728312015533447
+  trial_time_stamp: 1598948954.9007206
+trial_57:
+  count: 57
+  stimulus: stimulus_8
+  standard_stim: 315.0
+  test_stim: 312.1761282289763
+  calculated_intensity: -2.823871771023657
+  actual_intensity: -2.8
+  judge: 1
+  react_time: 0.7760956287384033
+  trial_time_stamp: 1598948958.0524025
+trial_58:
+  count: 58
+  stimulus: stimulus_9
+  standard_stim: 45.0
+  test_stim: 42.176128228976346
+  calculated_intensity: -2.823871771023657
+  actual_intensity: -2.8
+  judge: 1
+  react_time: 0.7786026000976562
+  trial_time_stamp: 1598948961.212648
+trial_59:
+  count: 59
+  stimulus: stimulus_10
+  standard_stim: 90.0
+  test_stim: 84.03876863901688
+  calculated_intensity: -5.9612313609831205
+  actual_intensity: -5.8
+  judge: 1
+  react_time: 0.7803263664245605
+  trial_time_stamp: 1598948964.8208108
+trial_60:
+  count: 60
+  stimulus: stimulus_11
+  standard_stim: 180.0
+  test_stim: 173.51566540551008
+  calculated_intensity: -6.484334594489914
+  actual_intensity: -6.4
+  judge: 0
+  react_time: 0.7871794700622559
+  trial_time_stamp: 1598948968.3567145
+trial_61:
+  count: 61
+  stimulus: stimulus_12
+  standard_stim: 270.0
+  test_stim: 272.8238717710237
+  calculated_intensity: 2.823871771023657
+  actual_intensity: 2.8
+  judge: 1
+  react_time: 0.7778358459472656
+  trial_time_stamp: 1598948972.0209346
+trial_62:
+  count: 62
+  stimulus: stimulus_13
+  standard_stim: 90.0
+  test_stim: 92.82387177102366
+  calculated_intensity: 2.823871771023657
+  actual_intensity: 2.8
+  judge: 1
+  react_time: 0.7768945693969727
+  trial_time_stamp: 1598948975.4130955
+trial_63:
+  count: 63
+  stimulus: stimulus_14
+  standard_stim: 180.0
+  test_stim: 182.82387177102365
+  calculated_intensity: 2.823871771023657
+  actual_intensity: 2.8
+  judge: 0
+  react_time: 0.778066873550415
+  trial_time_stamp: 1598948978.4690497
+trial_64:
+  count: 64
+  stimulus: stimulus_15
+  standard_stim: 135.0
+  test_stim: 132.17612822897635
+  calculated_intensity: -2.823871771023657
+  actual_intensity: -2.8
+  judge: 1
+  react_time: 0.7737317085266113
+  trial_time_stamp: 1598948981.7487993
+trial_65:
+  count: 65
+  stimulus: stimulus_0
+  standard_stim: 0.0
+  test_stim: -2.2321079383357305
+  calculated_intensity: -2.2321079383357305
+  actual_intensity: -2.2
+  judge: 1
+  react_time: 0.7842519283294678
+  trial_time_stamp: 1598948984.9088318
+trial_66:
+  count: 66
+  stimulus: stimulus_1
+  standard_stim: 270.0
+  test_stim: 267.76789206166427
+  calculated_intensity: -2.2321079383357305
+  actual_intensity: -2.2
+  judge: 0
+  react_time: 2.688363552093506
+  trial_time_stamp: 1598948988.0451384
+trial_67:
+  count: 67
+  stimulus: stimulus_2
+  standard_stim: 0.0
+  test_stim: 5.850530188255431
+  calculated_intensity: 5.850530188255431
+  actual_intensity: 5.8
+  judge: 1
+  react_time: 0.7794451713562012
+  trial_time_stamp: 1598948993.3974879
+trial_68:
+  count: 68
+  stimulus: stimulus_3
+  standard_stim: 315.0
+  test_stim: 317.23210793833573
+  calculated_intensity: 2.2321079383357305
+  actual_intensity: 2.2
+  judge: 0
+  react_time: 0.7747666835784912
+  trial_time_stamp: 1598948996.9416633
+trial_69:
+  count: 69
+  stimulus: stimulus_4
+  standard_stim: 225.0
+  test_stim: 227.23210793833573
+  calculated_intensity: 2.2321079383357305
+  actual_intensity: 2.2
+  judge: 1
+  react_time: 0.7732021808624268
+  trial_time_stamp: 1598949000.2054524
+trial_70:
+  count: 70
+  stimulus: stimulus_5
+  standard_stim: 45.0
+  test_stim: 49.24431595058262
+  calculated_intensity: 4.244315950582614
+  actual_intensity: 4.2
+  judge: 1
+  react_time: 0.7783463001251221
+  trial_time_stamp: 1598949003.68516
+trial_71:
+  count: 71
+  stimulus: stimulus_6
+  standard_stim: 135.0
+  test_stim: 139.891197818374
+  calculated_intensity: 4.891197818374006
+  actual_intensity: 4.8
+  judge: 1
+  react_time: 0.8235092163085938
+  trial_time_stamp: 1598949006.8455555
+trial_72:
+  count: 72
+  stimulus: stimulus_7
+  standard_stim: 225.0
+  test_stim: 216.6019568605246
+  calculated_intensity: -8.39804313947538
+  actual_intensity: -8.4
+  judge: 1
+  react_time: 0.7765598297119141
+  trial_time_stamp: 1598949010.437592
+trial_73:
+  count: 73
+  stimulus: stimulus_8
+  standard_stim: 315.0
+  test_stim: 312.76789206166427
+  calculated_intensity: -2.2321079383357305
+  actual_intensity: -2.2
+  judge: 1
+  react_time: 0.7730815410614014
+  trial_time_stamp: 1598949013.5812068
+trial_74:
+  count: 74
+  stimulus: stimulus_9
+  standard_stim: 45.0
+  test_stim: 42.76789206166427
+  calculated_intensity: -2.2321079383357305
+  actual_intensity: -2.2
+  judge: 0
+  react_time: 0.7764952182769775
+  trial_time_stamp: 1598949016.7101214
+trial_75:
+  count: 75
+  stimulus: stimulus_10
+  standard_stim: 90.0
+  test_stim: 85.14660916987583
+  calculated_intensity: -4.853390830124163
+  actual_intensity: -4.8
+  judge: 1
+  react_time: 0.7728183269500732
+  trial_time_stamp: 1598949020.4537687
+trial_76:
+  count: 76
+  stimulus: stimulus_11
+  standard_stim: 180.0
+  test_stim: 171.92647872021135
+  calculated_intensity: -8.073521279788661
+  actual_intensity: -8.2
+  judge: 1
+  react_time: 0.7726168632507324
+  trial_time_stamp: 1598949023.6057198
+trial_77:
+  count: 77
+  stimulus: stimulus_12
+  standard_stim: 270.0
+  test_stim: 272.23210793833573
+  calculated_intensity: 2.2321079383357305
+  actual_intensity: 2.2
+  judge: 1
+  react_time: 0.7822184562683105
+  trial_time_stamp: 1598949027.078464
+trial_78:
+  count: 78
+  stimulus: stimulus_13
+  standard_stim: 90.0
+  test_stim: 92.23210793833573
+  calculated_intensity: 2.2321079383357305
+  actual_intensity: 2.2
+  judge: 1
+  react_time: 0.7795684337615967
+  trial_time_stamp: 1598949030.1102853
+trial_79:
+  count: 79
+  stimulus: stimulus_14
+  standard_stim: 180.0
+  test_stim: 184.2443159505826
+  calculated_intensity: 4.244315950582614
+  actual_intensity: 4.2
+  judge: 1
+  react_time: 0.7728900909423828
+  trial_time_stamp: 1598949033.7179184
+trial_80:
+  count: 80
+  stimulus: stimulus_15
+  standard_stim: 135.0
+  test_stim: 132.76789206166427
+  calculated_intensity: -2.2321079383357305
+  actual_intensity: -2.2
+  judge: 1
+  react_time: 2.2643778324127197
+  trial_time_stamp: 1598949037.0380454
+trial_81:
+  count: 81
+  stimulus: stimulus_0
+  standard_stim: 0.0
+  test_stim: -1.7521564323057137
+  calculated_intensity: -1.7521564323057137
+  actual_intensity: -1.8
+  judge: 1
+  react_time: 0.7759158611297607
+  trial_time_stamp: 1598949042.0219903
+trial_82:
+  count: 82
+  stimulus: stimulus_1
+  standard_stim: 270.0
+  test_stim: 266.60245898972147
+  calculated_intensity: -3.397541010278508
+  actual_intensity: -3.4
+  judge: 1
+  react_time: 0.7749898433685303
+  trial_time_stamp: 1598949045.4702737
+trial_83:
+  count: 83
+  stimulus: stimulus_2
+  standard_stim: 0.0
+  test_stim: 5.359875358734531
+  calculated_intensity: 5.359875358734531
+  actual_intensity: 5.2
+  judge: 1
+  react_time: 0.7804265022277832
+  trial_time_stamp: 1598949048.7743266
+trial_84:
+  count: 84
+  stimulus: stimulus_3
+  standard_stim: 315.0
+  test_stim: 318.39754101027853
+  calculated_intensity: 3.397541010278508
+  actual_intensity: 3.4
+  judge: 1
+  react_time: 0.7776553630828857
+  trial_time_stamp: 1598949051.8779697
+trial_85:
+  count: 85
+  stimulus: stimulus_4
+  standard_stim: 225.0
+  test_stim: 226.75215643230572
+  calculated_intensity: 1.7521564323057137
+  actual_intensity: 1.8
+  judge: 1
+  react_time: 2.1038148403167725
+  trial_time_stamp: 1598949055.1509676
+trial_86:
+  count: 86
+  stimulus: stimulus_5
+  standard_stim: 45.0
+  test_stim: 48.72725000348368
+  calculated_intensity: 3.7272500034836855
+  actual_intensity: 3.8
+  judge: 1
+  react_time: 0.7729794979095459
+  trial_time_stamp: 1598949059.9823425
+trial_87:
+  count: 87
+  stimulus: stimulus_6
+  standard_stim: 135.0
+  test_stim: 139.3994890124813
+  calculated_intensity: 4.39948901248129
+  actual_intensity: 4.4
+  judge: 1
+  react_time: 0.8239448070526123
+  trial_time_stamp: 1598949063.5344064
+trial_88:
+  count: 88
+  stimulus: stimulus_7
+  standard_stim: 225.0
+  test_stim: 216.90007836410484
+  calculated_intensity: -8.099921635895168
+  actual_intensity: -8.0
+  judge: 1
+  react_time: 0.7758150100708008
+  trial_time_stamp: 1598949067.3999145
+trial_89:
+  count: 89
+  stimulus: stimulus_8
+  standard_stim: 315.0
+  test_stim: 313.2478435676943
+  calculated_intensity: -1.7521564323057137
+  actual_intensity: -1.8
+  judge: 1
+  react_time: 0.7754366397857666
+  trial_time_stamp: 1598949070.9586105
+trial_90:
+  count: 90
+  stimulus: stimulus_9
+  standard_stim: 45.0
+  test_stim: 41.60245898972149
+  calculated_intensity: -3.397541010278508
+  actual_intensity: -3.4
+  judge: 1
+  react_time: 0.7800047397613525
+  trial_time_stamp: 1598949074.4709752
+trial_91:
+  count: 91
+  stimulus: stimulus_10
+  standard_stim: 90.0
+  test_stim: 85.61227524479821
+  calculated_intensity: -4.387724755201794
+  actual_intensity: -4.4
+  judge: 1
+  react_time: 0.7772791385650635
+  trial_time_stamp: 1598949077.7429936
+trial_92:
+  count: 92
+  stimulus: stimulus_11
+  standard_stim: 180.0
+  test_stim: 172.45407074784072
+  calculated_intensity: -7.545929252159281
+  actual_intensity: -7.6
+  judge: 1
+  react_time: 0.7797479629516602
+  trial_time_stamp: 1598949080.8949816
+trial_93:
+  count: 93
+  stimulus: stimulus_12
+  standard_stim: 270.0
+  test_stim: 271.7521564323057
+  calculated_intensity: 1.7521564323057137
+  actual_intensity: 1.8
+  judge: 0
+  react_time: 1.1447196006774902
+  trial_time_stamp: 1598949084.1666992
+trial_94:
+  count: 94
+  stimulus: stimulus_13
+  standard_stim: 90.0
+  test_stim: 91.75215643230571
+  calculated_intensity: 1.7521564323057137
+  actual_intensity: 1.8
+  judge: 1
+  react_time: 0.7779009342193604
+  trial_time_stamp: 1598949088.238846
+trial_95:
+  count: 95
+  stimulus: stimulus_14
+  standard_stim: 180.0
+  test_stim: 183.72725000348368
+  calculated_intensity: 3.7272500034836855
+  actual_intensity: 3.8
+  judge: 1
+  react_time: 0.7819514274597168
+  trial_time_stamp: 1598949091.5911129
+trial_96:
+  count: 96
+  stimulus: stimulus_15
+  standard_stim: 135.0
+  test_stim: 133.24784356769428
+  calculated_intensity: -1.7521564323057137
+  actual_intensity: -1.8
+  judge: 0
+  react_time: 0.7748682498931885
+  trial_time_stamp: 1598949094.9434752
+trial_97:
+  count: 97
+  stimulus: stimulus_0
+  standard_stim: 0.0
+  test_stim: -1.3884589364106548
+  calculated_intensity: -1.3884589364106548
+  actual_intensity: -1.4
+  judge: 1
+  react_time: 2.1996304988861084
+  trial_time_stamp: 1598949098.6071365
+trial_98:
+  count: 98
+  stimulus: stimulus_1
+  standard_stim: 270.0
+  test_stim: 267.01364313268306
+  calculated_intensity: -2.986356867316944
+  actual_intensity: -3.0
+  judge: 1
+  react_time: 0.7750062942504883
+  trial_time_stamp: 1598949103.4876745
+trial_99:
+  count: 99
+  stimulus: stimulus_2
+  standard_stim: 0.0
+  test_stim: 4.97354554648257
+  calculated_intensity: 4.97354554648257
+  actual_intensity: 5.0
+  judge: 1
+  react_time: 0.7763636112213135
+  trial_time_stamp: 1598949106.5910842
+trial_100:
+  count: 100
+  stimulus: stimulus_3
+  standard_stim: 315.0
+  test_stim: 317.98635686731694
+  calculated_intensity: 2.986356867316944
+  actual_intensity: 3.0
+  judge: 1
+  react_time: 0.7777683734893799
+  trial_time_stamp: 1598949110.0481803
+trial_101:
+  count: 101
+  stimulus: stimulus_4
+  standard_stim: 225.0
+  test_stim: 226.38845893641064
+  calculated_intensity: 1.3884589364106548
+  actual_intensity: 1.4
+  judge: 1
+  react_time: 0.7798988819122314
+  trial_time_stamp: 1598949113.3997316
+trial_102:
+  count: 102
+  stimulus: stimulus_5
+  standard_stim: 45.0
+  test_stim: 48.43555847444114
+  calculated_intensity: 3.4355584744411374
+  actual_intensity: 3.4
+  judge: 1
+  react_time: 6.3120951652526855
+  trial_time_stamp: 1598949116.4877415
+trial_103:
+  count: 103
+  stimulus: stimulus_6
+  standard_stim: 135.0
+  test_stim: 139.14975517633067
+  calculated_intensity: 4.149755176330669
+  actual_intensity: 4.2
+  judge: 0
+  react_time: 0.7769482135772705
+  trial_time_stamp: 1598949125.3920615
+trial_104:
+  count: 104
+  stimulus: stimulus_7
+  standard_stim: 225.0
+  test_stim: 217.15181532100482
+  calculated_intensity: -7.848184678995192
+  actual_intensity: -7.8
+  judge: 1
+  react_time: 0.7803621292114258
+  trial_time_stamp: 1598949128.4481506
+trial_105:
+  count: 105
+  stimulus: stimulus_8
+  standard_stim: 315.0
+  test_stim: 313.61154106358936
+  calculated_intensity: -1.3884589364106548
+  actual_intensity: -1.4
+  judge: 0
+  react_time: 0.7772974967956543
+  trial_time_stamp: 1598949131.5137117
+trial_106:
+  count: 106
+  stimulus: stimulus_9
+  standard_stim: 45.0
+  test_stim: 42.01364313268306
+  calculated_intensity: -2.986356867316944
+  actual_intensity: -3.0
+  judge: 1
+  react_time: 0.8789842128753662
+  trial_time_stamp: 1598949134.728714

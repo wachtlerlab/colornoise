@@ -1,0 +1,165 @@
+time: 20200821T1548
+cfg_file: config/expconfig_8bit.yaml
+par_file: config/cn2x3_demo.yaml
+monitor:
+  name: VIEWPixx_2000A
+  size:
+  - 1920
+  - 1200
+  width: 48.4
+  distance: 57
+depthBits: 8
+hue_list: config/colorlist/hue-list-10bit-res0.2-sub-None.npy
+patch_nmb: 16
+patch_size: 0.75
+ref_size: 0.8
+field_size:
+- 0.4
+- 0.4
+leftRef.pos:
+- -5
+- 2.5
+rightRef.pos:
+- 5
+- 2.5
+standard.xlim:
+- -1.5
+- 1.5
+standard.ylim:
+- 1
+- 4
+test.xlim:
+- -1.5
+- 1.5
+test.ylim:
+- -4
+- -1
+trial_nmb: 15
+trial_dur: 1.5
+c: 0.12
+sscale: 2.6
+dlum: 0
+noise_condition: L-L
+sigma: 2
+stimulus_0:
+  label: hue_2m
+  standard: 45.0
+  leftRef: 55.0
+  rightRef: 35.0
+  stairType: quest
+  startVal: 3.0
+  min_val: 0.2
+  max_val: 10.0
+  stepType: null
+  nReversals: 2
+  stepSizes:
+  - 2
+  - 1
+  nUp: null
+  nDown: null
+  startValSd: 10
+  pThreshold: 0.63
+stimulus_1:
+  label: hue_2p
+  standard: 45.0
+  leftRef: 55.0
+  rightRef: 35.0
+  stairType: quest
+  startVal: 3.0
+  min_val: 0.2
+  max_val: 10.0
+  stepType: null
+  nReversals: 2
+  stepSizes:
+  - 2
+  - 1
+  nUp: null
+  nDown: null
+  startValSd: 10
+  pThreshold: 0.63
+  stimulus_2:
+    label: hue_5m
+    standard: 180.0
+    leftRef: 190.0
+    rightRef: 170.0
+    stairType: quest
+    startVal: 3.0
+    min_val: 0.2
+    max_val: 10.0
+    stepType: null
+    nReversals: 2
+    stepSizes:
+    - 2
+    - 1
+    nUp: null
+    nDown: null
+    startValSd: 10
+    pThreshold: 0.63
+  stimulus_3:
+    label: hue_5p
+    standard: 180.0
+    leftRef: 190.0
+    rightRef: 170.0
+    stairType: quest
+    startVal: 3.0
+    min_val: 0.2
+    max_val: 10.0
+    stepType: null
+    nReversals: 2
+    stepSizes:
+    - 2
+    - 1
+    nUp: null
+    nDown: null
+    startValSd: 10
+    pThreshold: 0.63
+trial_1:
+  count: 1
+  stimulus: stimulus_0
+  standard_stim: 45.0
+  test_stim: 42.0
+  calculated_intensity: -3.0
+  actual_intensity: -3.0
+  judge: 1
+  react_time: -0.21400880813598633
+  trial_time_stamp: 1598017692.3107748
+trial_2:
+  count: 2
+  stimulus: stimulus_1
+  standard_stim: 45.0
+  test_stim: 48.0
+  calculated_intensity: 3.0
+  actual_intensity: 3.0
+  judge: 1
+  react_time: -0.21450114250183105
+  trial_time_stamp: 1598017703.365689
+trial_3:
+  count: 3
+  stimulus: stimulus_0
+  standard_stim: 45.0
+  test_stim: 43.48841194850158
+  calculated_intensity: -1.511588051498424
+  actual_intensity: -1.4
+  judge: 1
+  react_time: -0.21636962890625
+  trial_time_stamp: 1598017716.1816592
+trial_4:
+  count: 4
+  stimulus: stimulus_1
+  standard_stim: 45.0
+  test_stim: 46.51158805149842
+  calculated_intensity: 1.511588051498424
+  actual_intensity: 1.6
+  judge: 1
+  react_time: -0.21541261672973633
+  trial_time_stamp: 1598017725.829897
+trial_5:
+  count: 5
+  stimulus: stimulus_0
+  standard_stim: 45.0
+  test_stim: 44.8
+  calculated_intensity: -0.2
+  actual_intensity: -0.2
+  judge: 1
+  react_time: -0.21656537055969238
+  trial_time_stamp: 1598017732.0861087

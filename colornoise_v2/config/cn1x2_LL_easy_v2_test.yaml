@@ -1,0 +1,42 @@
+# Parameters for quick testing paradigm
+c: 0.12
+sscale: 2.6
+dlum: 0
+noise_condition: L-L
+sigma: 2
+stimulus_0:
+  label: hue_1p
+  standard: 0.0
+  ref: 10.0
+  stairType: quest
+  startVal: 5.0
+  std: 0
+  min_val: 0.2
+  max_val: 10
+  stepType: null
+  nReversals: 2
+  stepSizes:
+  - 2
+  - 1
+  nUp: null
+  nDown: null
+  startValSd: 10
+  pThreshold: 0.63
+stimulus_1:
+  label: hue_1m
+  standard: 0.0
+  ref: -10.0
+  stairType: quest
+  startVal: 5.0
+  std: 0
+  min_val: 0.2
+  max_val: 10
+  stepType: null
+  nReversals: 2
+  stepSizes:
+  - 2
+  - 1
+  nUp: null
+  nDown: null
+  startValSd: 10
+  pThreshold: 0.63
